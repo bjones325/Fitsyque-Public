@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageBackground, Platform, Dimensions, Text, View, Button, TextInput, StyleSheet, AsyncStorage} from 'react-native';
+import {TouchableOpacity, ImageBackground, Platform, Dimensions, Text, View, Button, TextInput, StyleSheet, AsyncStorage} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -65,6 +65,9 @@ export default class LoginScreen extends React.Component {
             source={require("../Assets/jump.jpg")}
             >
                 <View style = {styles.background}>
+                    <TouchableOpacity style = {styles.backButton} onPress={() => this.props.navigation.goBack()}>
+                        <Icon name='arrow-left' style={{ fontSize: 36, color: 'silver' }} />
+                    </TouchableOpacity >
                     <Text style={styles.titleText}>
                            Login to begin today's workout
                     </Text>
@@ -81,9 +84,9 @@ export default class LoginScreen extends React.Component {
                             <TextInput onChangeText={(text) => this.setState({password: text})} 
                                 style = {styles.textBox}/>
                             <Button title="Login" onPress={this.login} />
-                        </View>
-                        <View style={{flex: 1, paddingTop: 10}}>
-                            <Spinner isVisible={this.state.visibleAnimation} size={40} type={"ThreeBounce"} color={"#FF0000"}/>
+                            <View>
+                                <Spinner isVisible={this.state.visibleAnimation} size={40} type={"ThreeBounce"} color={"#FF0000"}/>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -115,14 +118,14 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 2,
         padding: 10,
-        color: 'white'
+        color: 'white',
     },
 
     titleText: {
         color: 'white',
         fontWeight: "300",
         fontSize: 38,
-        paddingTop: 70,
+        paddingTop: 50,
         flex: 2
     },
 
@@ -137,6 +140,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 40
+        paddingBottom: 70
+    },
+
+    backButton: {
+        alignSelf: 'flex-start',
+        padding: 15,
     }
 });

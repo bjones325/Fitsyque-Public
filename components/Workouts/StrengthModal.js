@@ -58,8 +58,8 @@ export default class StrengthModal extends React.Component {
 
     render() {
         return (
-            <View>
-                <Text style={{ paddingTop: 5, fontSize: 18 }}>Set Workout Stats</Text>
+            <View style={styles.container}>
+                <Text style={{ paddingTop: 5, fontSize: 22 }}>Set Workout Stats</Text>
                 <WorkoutDetailSelector text="Reps" getValue={this.state.Reps} updateValue={(value) => { this.setState({ Reps: value }) }} />
                 <WorkoutDetailSelector text="Sets" getValue={this.state.Sets} updateValue={(value) => { this.setState({ Sets: value }) }} />
                 <WorkoutDetailSelector text="Weight" getValue={this.state.Weight} updateValue={(value) => { this.setState({ Weight: value }) }} />
@@ -86,5 +86,11 @@ const styles = StyleSheet.create({
     confirmButton: {
         color: 'green',
         borderRadius: 25,
+    },
+
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

@@ -39,12 +39,13 @@ export default class Splash extends React.Component {
 
 const styles = StyleSheet.create({
 
+
     topText: {
         flex: 1,
-        color: 'indianred',
-        fontWeight: 'bold',
+        color: 'silver',
+        fontWeight: "300",
         fontSize: 34,
-        paddingTop: 20,
+        paddingTop: 50,
     },
 
     background: {
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.7)'
     },
 
     iconSet: {

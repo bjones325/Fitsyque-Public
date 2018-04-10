@@ -8,7 +8,7 @@ import StrengthModal from './StrengthModal';
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
-export default class WorkoutModal extends React.Component {
+export default class WorkoutModal extends React.PureComponent {
     constructor(props){
         super(props);
         this.state = {
@@ -56,16 +56,16 @@ export default class WorkoutModal extends React.Component {
     render() {
         return(
             <Modal
-                style = {styles.modalContainer}
                 isVisible={this.props.isVisible}
                 backdropColor = 'gray'
-                backdropOpacity = {0.5}
+                backdropOpacity = {0.8}
                 onBackdropPress = {() => {
                     this.props.onClose(false, "","","")
                 }}
                 animationIn = "fadeIn"
                 animationOut = "fadeOut"
             >
+            <View style={styles.modalContainer}>
             {this.state.index == 0 ?
                 <WorkoutListModal
                     next={(workout) => {
@@ -89,6 +89,7 @@ export default class WorkoutModal extends React.Component {
                         onClose={(a,b,c) => {this.props.onClose(true, a,b,c)}}
                     />
             }
+            </View>
             </Modal>
         );
     }
@@ -120,13 +121,20 @@ const styles = StyleSheet.create({
         color: 'green'
     },
 
+    container: {
+        height: 200,
+        width: 200
+    },
+
     modalContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
         backgroundColor: 'white',
+        flex: 1,
+        flexDirection: 'column',
         borderRadius: 25,
-        height: 450, 
+        maxHeight: 450, 
         width: 250,
     }
 });

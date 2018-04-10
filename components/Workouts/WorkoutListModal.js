@@ -1,7 +1,6 @@
 import React from 'react';
 import {Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage} from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import Modal from "react-native-modal";
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
@@ -47,8 +46,8 @@ export default class WorkoutListModal extends React.Component {
 
     render() {
         return(
-        <View>
-            <Text style={{paddingTop: 5, fontSize: 18}}>Add a Workout</Text>
+        <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+            <Text style={{paddingTop: 5, fontSize: 22}}>Add a Workout</Text>
             <TextInput
                 borderRadius = {25}
                 placeholder="Workout Name"
@@ -87,13 +86,13 @@ const styles = StyleSheet.create({
     },
 
     item: {
-        padding: 5,
+        paddingVertical: 5,
         fontSize: 16,
         height: 26,
     },
 
     selectedItem: {
-        padding: 5,
+        paddingVertical: 5,
         fontSize: 16,
         height: 26,
         color: 'green'

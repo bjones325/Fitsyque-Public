@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage} from 'react-native';
+import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 export default class MacroModal extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             Fat: 0,
@@ -29,55 +29,65 @@ export default class MacroModal extends React.Component {
                 })
             })
         })
-        .then((response) => 
-            response.json()
-        )
-        .then((responseJson) => {
-            if (!responseJson.success) {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            } else {
-                this.props.onClose("success", "Success", "Your workout has been added!");
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            console.log(responseJson);
-            this.setState({isVisible: false});
-            this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
-        });
+            .then((response) =>
+                response.json()
+            )
+            .then((responseJson) => {
+                if (!responseJson.success) {
+                    this.props.navigation.dispatch(resetB);
+                    alert(responseJson.message);
+                } else {
+                    this.props.onClose("success", "Success", "Your macronutrients has been added!");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log(responseJson);
+                this.setState({ isVisible: false });
+                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+            });
     }
 
     render() {
-            return (
-                <View style={styles.modalContainer}>
-                <Text style={{paddingTop: 5, fontSize: 18}}>Insert Macro Data</Text>
-                <TextInput
-                    borderRadius = {25}
-                    style={{height: 40}}
-                    placeholder="  0  "
-                    onChangeText={(text)=> this.setState({Fat: parseInt(text)})}
-                    value={this.state.Fat.toString()}
-                    maxLength={10}
-                />
-                <TextInput
-                    borderRadius = {25}
-                    style={{height: 40}}
-                    placeholder="  0  "
-                    value = {this.state.Protein}
-                    onChangeText={(text)=> this.setState({Protein: parseInt(text)})}
-                    value={this.state.Protein.toString()}
-                    maxLength={10}
-                />
-                <TextInput
-                    borderRadius = {25}
-                    style={{height: 40}}
-                    placeholder="  0  "
-                    value = {this.state.Carb}
-                    onChangeText={(text)=> this.setState({Carb: parseInt(text)})}
-                    value={this.state.Carb.toString()}
-                    maxLength={10}
-                />
+        return (
+            <View style={styles.modalContainer}>
+                <Text style={{ paddingTop: 10, fontSize: 24, paddingBottom: 30, fontWeight: '600' }}>Insert Macro Data</Text>
+                <View style={styles.buttons}>
+                    <Text style={styles.text}>Fat</Text>
+                    <TextInput
+                        borderRadius={25}
+                        textAlign={'center'}
+                        style={styles.textInput}
+                        keyboardType='numeric'
+                        placeholder="0"
+                        onChangeText={(text) => this.setState({ Fat: parseInt(text) })}
+                        value={this.state.Fat.toString()}
+                        maxLength={3}
+                    />
+                    <Text style={styles.text}>Protein</Text>
+                    <TextInput
+                        borderRadius={25}
+                        textAlign={'center'}
+                        style={styles.textInput}
+                        keyboardType='numeric'
+                        placeholder="0"
+                        value={this.state.Protein}
+                        onChangeText={(text) => this.setState({ Protein: parseInt(text) })}
+                        value={this.state.Protein.toString()}
+                        maxLength={3}
+                    />
+                    <Text style={styles.text}>Carbs</Text>
+                    <TextInput
+                        borderRadius={25}
+                        textAlign={'center'}
+                        style={styles.textInput}
+                        placeholder="0"
+                        keyboardType='numeric'
+                        value={this.state.Carb}
+                        onChangeText={(text) => this.setState({ Carb: parseInt(text) })}
+                        value={this.state.Carb.toString()}
+                        maxLength={3}
+                    />
                     <Button
                         title="Confirm"
                         color="green"
@@ -87,9 +97,10 @@ export default class MacroModal extends React.Component {
                                 this.pushNewMacro();
                             }
                         }
-                    /> 
-                </View>   
-            );
+                    />
+                </View>
+            </View>
+        );
     }
 };
 
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
 
     confirmButton: {
         color: 'green',
-        borderRadius: 25,
+        paddingTop: 40
     },
 
     barView: {
@@ -106,25 +117,38 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    item: {
-        padding: 5,
-        fontSize: 16,
-        height: 26,
-    },
-
-    selectedItem: {
-        padding: 5,
-        fontSize: 16,
-        height: 26,
-        color: 'green'
+    buttons: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 20,
+        paddingBottom: 70
     },
 
     modalContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'column',
         backgroundColor: 'white',
         borderRadius: 25,
-        height: 450, 
+        height: 400,
         width: 250,
+    },
+
+    textInput: {
+        width: 50,
+        height: 35,
+        borderColor: 'black',
+        borderRadius: 8,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        color: 'black'
+    },
+
+    text: {
+        fontWeight: '300',
+        fontSize: 20,
+        paddingTop: 20,
+        paddingBottom: 5
     }
 });
