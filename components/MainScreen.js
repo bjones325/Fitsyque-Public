@@ -1,0 +1,77 @@
+import React from 'react';
+import { Text, View, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+
+export default class Splash extends React.Component {
+    render() {
+        return (
+            <View style={styles.background}>
+                <Text style={styles.topText}>
+                    Welcome back!
+                </Text>
+                <View style={styles.iconSet}>
+                    <View style={styles.iconRow}>
+                        <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('WorkoutsMain')}>
+                            <Icon2 name="weight-kilogram" style={styles.icon} />
+                            <Text> Workouts </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('GraphScreen')}>
+                            <Icon name="line-chart" style={styles.icon} />
+                            <Text> Analysis </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.iconRow}>
+                        <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('MacronutrientMain')}>
+                            <Icon name="pie-chart" style={styles.icon} />
+                            <Text> Macros </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('ImageGallery')}>
+                            <Icon2 name="ruler" style={styles.icon} />
+                            <Text> Measurements </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+
+    topText: {
+        flex: 1,
+        color: 'indianred',
+        fontWeight: 'bold',
+        fontSize: 34,
+        paddingTop: 20,
+    },
+
+    background: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    iconSet: {
+        flex: 2,
+        paddingTop: 150,
+        flexDirection: 'column'
+    },
+
+    iconRow: {
+        flexDirection: 'row',
+        paddingVertical: 15,
+    },
+
+    icon: {
+        alignSelf: 'center',
+        fontSize: 32
+    },
+
+    touch: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+});
