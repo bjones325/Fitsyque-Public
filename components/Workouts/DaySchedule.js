@@ -107,7 +107,7 @@ export default class DaySchedule extends React.Component {
                                                     onPress={()=> this.deleteEntry(item[9])}
                                                 >
                                                     <View>
-                                                        <Text> Delete </Text>
+                                                        <Text style={{fontWeight: 'bold'}}> Delete </Text>
                                                     </View>
                                                 </TouchableOpacity>
                                                 <View style={styles.standaloneRowFront}>

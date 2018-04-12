@@ -61,7 +61,7 @@ export default class MacroScreen extends React.PureComponent {
                     plusPress={() => this.setState({isVisible: true, selectedWorkout: {}, searchInput: ""})} />
                 <View>
                     {(this.state.Fat + this.state.Protein + this.state.Carb) == 0 ?
-                    <Text> No Data </Text>
+                    <Text style={{textAlign: 'center', padding: 20}}> No Macronutrient Data </Text>
                     :
                     <View>
                         <PieGraph data={this.state.data}/>

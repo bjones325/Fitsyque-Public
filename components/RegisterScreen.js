@@ -1,7 +1,8 @@
 import React from 'react';
-import { Platform, Dimensions, Text, View, Button, TextInput, StyleSheet } from 'react-native';
+import { Platform, TouchableOpacity, Dimensions, Text, View, Button, TextInput, StyleSheet } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
+import Icon from 'react-native-vector-icons/EvilIcons';
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -55,8 +56,11 @@ export default class LoginScreen extends React.Component {
 
     render() {
         return (
-            <View style={Styles.container}>
-                <View style={Styles.background}>
+            <View style={styles.container}>
+                <View style={styles.background}>
+                    <TouchableOpacity style = {styles.backButton} onPress={() => this.props.navigation.goBack()}>
+                        <Icon name='arrow-left' style={{ fontSize: 36, color: 'silver' }} />
+                    </TouchableOpacity>
                     <Text>
                         Register A New Account
                     </Text>
@@ -64,22 +68,22 @@ export default class LoginScreen extends React.Component {
                         Username
                     </Text>
                     <TextInput onChangeText={(text) => this.setState({ username: text })}
-                        style={Styles.textBox} />
+                        style={styles.textBox} />
                     <Text>
                         Email
                     </Text>
                     <TextInput onChangeText={(text) => this.setState({ email: text })}
-                        style={Styles.textBox} />
+                        style={styles.textBox} />
                     <Text>
                         Password
                     </Text>
                     <TextInput onChangeText={(text) => this.setState({ password: text })}
-                        style={Styles.textBox} />
+                        style={styles.textBox} />
                     <Text>
                         Confirm Password
                     </Text>
                     <TextInput onChangeText={(text) => this.setState({ confirmPassword: text })}
-                        style={Styles.textBox} />
+                        style={styles.textBox} />
                     <Button title="Register" onPress={() => this.register()} />
                 </View>
                 <Spinner isVisible={this.state.visibleAnimation} size={40} type={"ThreeBounce"} color={"#FF0000"} />
@@ -90,7 +94,7 @@ export default class LoginScreen extends React.Component {
     }
 };
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
     background: {
         marginTop: 200,
         flexDirection: 'column',
@@ -109,5 +113,11 @@ const Styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         padding: 10
+    },
+
+    backButton: {
+        alignSelf: 'flex-start',
+        paddingTop: 25,
+        paddingLeft: 10
     }
 });

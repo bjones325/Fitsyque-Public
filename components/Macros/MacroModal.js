@@ -60,7 +60,9 @@ export default class MacroModal extends React.Component {
                         style={styles.textInput}
                         keyboardType='numeric'
                         placeholder="0"
-                        onChangeText={(text) => this.setState({ Fat: parseInt(text) })}
+                        onChangeText={(text) => {
+                            this.setState({ Fat: isNaN(parseInt(text)) ? 0 : parseInt(text)})}
+                        }
                         value={this.state.Fat.toString()}
                         maxLength={3}
                     />
@@ -72,7 +74,7 @@ export default class MacroModal extends React.Component {
                         keyboardType='numeric'
                         placeholder="0"
                         value={this.state.Protein}
-                        onChangeText={(text) => this.setState({ Protein: parseInt(text) })}
+                        onChangeText={(text) => this.setState({ Protein: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
                         value={this.state.Protein.toString()}
                         maxLength={3}
                     />
@@ -84,7 +86,7 @@ export default class MacroModal extends React.Component {
                         placeholder="0"
                         keyboardType='numeric'
                         value={this.state.Carb}
-                        onChangeText={(text) => this.setState({ Carb: parseInt(text) })}
+                        onChangeText={(text) => this.setState({ Carb: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
                         value={this.state.Carb.toString()}
                         maxLength={3}
                     />
