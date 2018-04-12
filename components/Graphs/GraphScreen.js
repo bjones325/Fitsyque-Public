@@ -18,6 +18,7 @@ export default class GraphScreen extends React.Component {
             data: [],
             parsedData: [],
             workoutNames: [],
+            fullData: []
         }
         this.requestWorkoutList(new Date());
         this.requestWorkoutData(new Date());
@@ -52,6 +53,7 @@ export default class GraphScreen extends React.Component {
     }
 
     requestWorkoutData = (date) => {
+        console.log("D:" + date);
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch('https://fitsyque.azurewebsites.net/Graph/Data', {
                 method: "get",
@@ -82,26 +84,52 @@ export default class GraphScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => this.requestWorkoutData(date)}
+                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => {
+                    this.requestWorkoutData(date);
+                    this.requestWorkoutList(date);
+                    this.setState({
+                        selectedWorkout: {},
+                        selectedValueSet: []
+                    })
+                }}
                     plusPress={() => this.setState({isVisible: true, selectedWorkout: {}, searchInput: ""})} />
+                {Object.keys(this.state.fullData).length === 0 ?
+                    <Text style={styles.emptyText}> No Workouts Logged </Text>
+                :
                 <View>
                     <GraphChart data={this.getDataSet(this.state.selectedWorkout.Name, this.state.selectedValueSet[1])}/>
+                </View>
+                }
+
+                <View style={styles.wordSet}>
+                    <Text style={styles.listTitle}>Workouts</Text>
+                    <Text style={styles.listTitle}>Stats</Text>
                 </View>
                 <View style={styles.listSet}>
                     <FlatList
                     data={this.state.workoutNames}
-                    style = {{alignSelf: 'flex-start', paddingLeft: 8}}
+                    style={{
+                        alignSelf: 'flex-start',
+                        paddingLeft: 8,
+                        flex: 1,
+                        borderRadius: 25,
+                        height: 150,
+                        borderWidth: 1
+                    }}
                     keyExtractor={(item, index) => item.Name}
                     renderItem={({item}) => {  
-                            return <TouchableOpacity onPress={() => {
-                                this.setState({selectedWorkout: item})
-                            }}>
-                            <Text style={item.Name == this.state.selectedWorkout.Name ? styles.selectedItem : styles.item}>{item.Name}</Text></TouchableOpacity>}
-                    }
+                                return <TouchableOpacity onPress={() => {
+                                    this.setState({
+                                        selectedWorkout: item
+                                    })
+                                }}>
+                                <Text style={item.Name == this.state.selectedWorkout.Name ? styles.selectedItem : styles.item}>{item.Name}</Text></TouchableOpacity>}
+                        }
                     />
                     <FlatList
                         data={this.getDataTypes(this.state.selectedWorkout.TypeID)}
-                        keyExtractor={(item, index) => item}
+                        keyExtractor={(item, index) => item[0]}
+                        style={styles.valueSet}
                         renderItem={({item}) => {  
                                 return <TouchableOpacity onPress={() => {
                                     this.setState({
@@ -206,13 +234,45 @@ const styles = StyleSheet.create({
     item: {
         padding: 5,
         fontSize: 16,
-        height: 26,
+        height: 25,
     },
 
     selectedItem: {
         padding: 5,
         fontSize: 16,
-        height: 26,
+        height: 25,
         color: 'green'
     },
+
+    valueSet: {
+        alignSelf: 'flex-start',
+        paddingLeft: 8,
+        borderRadius: 25,
+        borderColor: 'black',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        height: 150,
+        flex: 1
+    },
+
+    wordSet: {
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+
+    listTitle: {
+        paddingBottom: 5,
+        color: 'black', //#841584
+        fontWeight: '200',
+        fontSize: 26,
+        width: 120,
+        textAlign: 'center'
+    },
+
+    emptyText: {
+        height: 400,
+        padding: 20,
+        alignSelf: 'center',
+    }
 });

@@ -31,7 +31,7 @@ export default class WorkoutsMain extends React.Component {
                 />
                 <DaySchedule
                     onRef={ref => (this.child = ref)}
-                    date={new Date()}
+                    date={() => this.topBar.getDate()}
                     openModal={(data) => {
                         this.setState({ isVisible: true });
                         this.modal.open(data, 1)

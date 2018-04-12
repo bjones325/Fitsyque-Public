@@ -28,7 +28,7 @@ export default class Splash extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('ImageGallery')}>
                             <Icon2 name="ruler" style={styles.icon} />
-                            <Text> Measurements </Text>
+                            <Text> Physique </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -69,11 +69,13 @@ const styles = StyleSheet.create({
 
     icon: {
         alignSelf: 'center',
-        fontSize: 32
+        fontSize: 64,
+        color: 'darkblue'
     },
 
     touch: {
         justifyContent: 'center',
         alignItems: 'center',
+        width: 150
     }
 });

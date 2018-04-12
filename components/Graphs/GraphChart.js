@@ -21,7 +21,7 @@ export default class GraphChart extends React.PureComponent {
         // and then displace the other axis with just as many pixels. Simple but manual.
 
         return (
-            <View style={{ height: 200, padding: 20, flexDirection: 'row' }}>
+            <View style={{ height: 400, padding: 20, flexDirection: 'row' }}>
                 <YAxis
                     data={this.props.data}
                     style={{ marginBottom: xAxisHeight }}

@@ -1,30 +1,31 @@
 import React from 'react';
-import {Text, View, Button, TextInput, StyleSheet, SectionList, AsyncStorage, ListItem, Header, TouchableOpacity} from 'react-native';
+import { Text, View, Button, TextInput, StyleSheet, SectionList, AsyncStorage, ListItem, Header, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+import { SwipeRow} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
 var Spinner = require('react-native-spinkit');
 
 
 export default class DaySchedule extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            data: [{data: ['null'], title: "null"}]
+            data: [{ data: ['null'], title: "null" }]
         };
-        this.requestWorkoutData(this.props.date);
+        this.requestWorkoutData();
     }
 
     componentDidMount() {
         this.props.onRef(this)
     }
-      
+
     componentWillUnmount() {
         this.props.onRef(undefined)
     }
 
-    requestWorkoutData = (date) => {
-        this.setState({loading: true});
+    requestWorkoutData = () => {
+        this.setState({ loading: true });
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch('https://fitsyque.azurewebsites.net/DayList', {
                 method: "get",
@@ -32,64 +33,129 @@ export default class DaySchedule extends React.Component {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'x-access-token': token,
-                    date: date.toISOString().substring(0, 10)
+                    date: this.props.date().toISOString().substring(0, 10)
                 }
             })
         })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            if(!responseJson.success) {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            } else {
-                this.parseData(responseJson.data);
-            }
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (!responseJson.success) {
+                    this.props.navigation.dispatch(resetB);
+                    alert(responseJson.message);
+                } else {
+                    console.log(responseJson.data)
+                    this.parseData(responseJson.data);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("There was an internal error while connecting! Please restart the app.")
+            });
+    }
+
+    deleteEntry = (id) => {
+        AsyncStorage.getItem('@app:session').then((token) => {
+            return fetch('https://fitsyque.azurewebsites.net/DayList', {
+                method: "delete",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': token,
+                    date: this.props.date().toISOString().substring(0, 10)
+                },
+                body: JSON.stringify({
+                    RecordID: id
+                })
+            })
         })
-        .catch((error) => {
-            console.log(error);
-            this.setState({isVisible: false});
-            alert("There was an internal error while connecting! Please restart the app.")
-        });
+            .then((response) => response.json())
+            .then((responseJson) => {
+                if (!responseJson.success) {
+                    console.log("failure");
+                } else {
+                    this.requestWorkoutData();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("There was an internal error while connecting! Please restart the app.")
+            });
     }
 
     render() {
         return (
             <View style={styles.view}>
                 {this.state.loading ?
-                <Spinner isVisible={this.state.loading} size={40} type={"ThreeBounce"} color={"#FF0000"}/>
-                :
-                this.state.data.length == 0 ?
-                <Text> No Data </Text>
-                :
-                <SectionList
-                    style={styles.flatlist}
-                    keyExtractor={(item, index) => item + index}
-                    renderItem={({item}) => {
-                    if(item[0] == 0) {
-                        return <View>
-                            <Text style = {styles.item}>{'\u2022'} Sets: {item[1]}, Reps: {item[2]}, Weight: {item[3]} </Text>
-                        </View>
-                    } else {
-                        return <View>
-                            <Text style = {styles.item}>{'\u2022'} Sets: {item[1]}, Reps: {item[2]}, Duration: {item[4]}, Intensity: {item[5]}, Incline: {item[6]}, Resistence: {item[7]} </Text>
-                        </View>
-                    }
-                    }}
-                    renderSectionHeader={({section}) =>      
-                        <View style = {styles.header}>
-                            <Text style = {styles.headerText}> {section.title} </Text>
-                            <View style = {styles.endHeader}>
-                                <TouchableOpacity style={styles.iconTouch} onPress={() => {
-                                    var length = this.state.sections[section.title].length - 1
-                                    this.props.openModal(this.state.sections[section.title][length]);
-                                }}>
-                                    <Icon name="add-to-list" style={styles.plus}/>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    }
-                    sections={this.state.data}
-                />
+                    <Spinner isVisible={this.state.loading} size={40} type={"ThreeBounce"} color={"#FF0000"} />
+                    :
+                    this.state.data.length == 0 ?
+                        <Text style={{textAlign: 'center'}}> No Workouts Logged </Text>
+                        :
+                        <SectionList
+                            style={styles.flatlist}
+                            keyExtractor={(item, index) => item + index}
+                            renderItem={({ item }) => {
+                                if (item[0] == 0) {
+                                    return (
+                                        <View>
+                                            <SwipeRow
+                                                rightOpenValue={-75}
+                                                disableRightSwipe={true}
+                                            >
+                                                <TouchableOpacity
+                                                    style={styles.standaloneRowBack}
+                                                    onPress={()=> this.deleteEntry(item[9])}
+                                                >
+                                                    <View>
+                                                        <Text> Delete </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                <View style={styles.standaloneRowFront}>
+                                                    <Text style={styles.item}>{'\u2022'} Sets: {item[1]}, Reps: {item[2]}, Weight: {item[3]} </Text>
+                                                </View>
+                                            </SwipeRow>
+                                        </View>
+                                    );
+                                } else {
+                                    return (
+                                        <View>
+                                            <SwipeRow
+                                                rightOpenValue={-75}
+                                                disableRightSwipe={true}
+                                            >
+                                                
+                                                <TouchableOpacity
+                                                    style={styles.standaloneRowBack}
+                                                    onPress={()=> this.deleteEntry(item[9])}
+                                                >
+                                                    <View>
+                                                        <Text> Delete </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                
+                                                <View style={styles.standaloneRowFront}>
+                                                    <Text style={styles.item}>{'\u2022'} Sets: {item[1]}, Reps: {item[2]}, Duration: {item[4]}, Intensity: {item[5]}, Incline: {item[6]}, Resistence: {item[7]} </Text>
+                                                </View>
+                                            </SwipeRow>
+                                        </View>
+                                    );
+                                }
+                            }}
+                            renderSectionHeader={({ section }) =>
+                                <View style={styles.header}>
+                                    <Text style={styles.headerText}> {section.title} </Text>
+                                    <View style={styles.endHeader}>
+                                        <TouchableOpacity style={styles.iconTouch} onPress={() => {
+                                            var length = this.state.sections[section.title].length - 1
+                                            this.props.openModal(this.state.sections[section.title][length]);
+                                        }}>
+                                            <Icon name="add-to-list" style={styles.plus} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            }
+                            sections={this.state.data}
+                        />
                 }
 
             </View>
@@ -98,7 +164,7 @@ export default class DaySchedule extends React.Component {
 
     parseData = (jsonData) => {
         var sections = {};
-        for(var i = 0; i < jsonData.length; i++) {
+        for (var i = 0; i < jsonData.length; i++) {
             var item = sections[jsonData[i].Name];
             if (item == null) {
                 sections[jsonData[i].Name] = [];
@@ -112,11 +178,12 @@ export default class DaySchedule extends React.Component {
                 jsonData[i].Intensity,
                 jsonData[i].Incline,
                 jsonData[i].Resistence,
-                jsonData[i].ExerciseID
+                jsonData[i].ExerciseID,
+                jsonData[i].RecordID
             ])
         }
-        var result = Object.keys(sections).map(function(key) {
-            return {title: key, data: sections[key]};
+        var result = Object.keys(sections).map(function (key) {
+            return { title: key, data: sections[key] };
         });
         this.setState({
             data: result,
@@ -128,7 +195,7 @@ export default class DaySchedule extends React.Component {
 
 const resetB = NavigationActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({routeName: 'MainScreen'})],
+    actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
 });
 
 const styles = StyleSheet.create({
@@ -142,10 +209,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         maxHeight: 595,
         justifyContent: 'center',
+        zIndex: 21
     },
 
     flatlist: {
         flex: 1,
+        zIndex: 20
     },
 
     item: {
@@ -185,5 +254,20 @@ const styles = StyleSheet.create({
     plus: {
         fontSize: 32,
         color: 'green',
+    },
+
+    standaloneRowFront: {
+        height: 50,
+        justifyContent: 'center',
+        backgroundColor: 'white',
+    },
+
+    standaloneRowBack: {
+        alignItems: 'center',
+        backgroundColor: 'red',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        padding: 15,
     }
 });
