@@ -1,11 +1,12 @@
 import React from 'react';
-import {Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage} from 'react-native';
+import {Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import TopBar from '../TopBar';
 import Modal from "react-native-modal";
 import MacroModal from './MacroModal';
 import PieGraph from './PieGraph'
+import MacroInformation from './MacroInformation';
 import DropdownAlert from 'react-native-dropdownalert';
 const WINDOW = Dimensions.get('window')
 
@@ -14,12 +15,13 @@ export default class MacroScreen extends React.PureComponent {
     constructor(props){
         super(props);
         this.state = {
-            data: [],
+            data: this.parseData({Fat: 1, Protein: 2, Carb: 3}),
             isVisible: false,
             Fat: 0,
             Protein: 0,
             Carb: 0,
             loading: false,
+            selectedType: null
         };
         this.requestMacroData(new Date());
     }
@@ -63,14 +65,21 @@ export default class MacroScreen extends React.PureComponent {
                     {(this.state.Fat + this.state.Protein + this.state.Carb) == 0 ?
                     <Text style={{textAlign: 'center', padding: 20}}> No Macronutrient Data </Text>
                     :
-                    <View>
-                        <PieGraph data={this.state.data}/>
-                        <Text style={{color: '#ff4500'}}> {'\u25A3'} Fat: {this.state.Fat} </Text>
-                        <Text style={{color: '#000080'}}> {'\u25A3'} Protein: {this.state.Protein} </Text>
-                        <Text style={{color: '#ffa500'}}> {'\u25A3'} Carbs: {this.state.Carb} </Text>
+                    <View style={{height: 400, width: WINDOW.width, alignItems: 'center', flexDirection: 'column', justifyContent: 'center'}}>
+                        <PieGraph data={this.state.data} onSelect={(type) => { console.log(type);
+                            this.setState({selectedType: type})}}/>
+                        <Text style={{color: 'darkgray', fontSize: 30}}>Macronutrient Record</Text> 
+                        <View style={{flexDirection: 'row', paddingTop: 5}}>
+                            <Text style={{color: '#ff4500', fontSize: 20, fontWeight: '500'}}>  Fat: {this.state.Fat} </Text>
+                            <Text style={{fontSize: 20}}> {'\u25A3'} </Text>
+                            <Text style={{color: '#000080', fontSize: 20, fontWeight: '500'}}> Protein: {this.state.Protein} </Text>
+                            <Text style={{fontSize: 20}}> {'\u25A3'} </Text>
+                            <Text style={{color: '#ffa500', fontSize: 20, fontWeight: '500'}}> Carbs: {this.state.Carb} </Text>
+                        </View>
                     </View>
                     }
                 </View>
+                <MacroInformation type={this.state.selectedType} amount={{Fat: this.state.Fat, Protein: this.state.Protein, Carb: this.state.Carb}} />
                 <Modal
                     style = {styles.modal}
                     isVisible={this.state.isVisible}
@@ -98,44 +107,32 @@ export default class MacroScreen extends React.PureComponent {
     }
 
     parseData = (jsonData) => {
-        var fat = parseInt(jsonData.Fat);
-        var protein = parseInt(jsonData.Protein);
-        var carb = parseInt(jsonData.Carb);
+        var fat = jsonData.Fat == null ? 1 : parseInt(jsonData.Fat);
+        var protein = jsonData.Protein == null ? 1 : parseInt(jsonData.Protein);
+        var carb = jsonData.Carb == null ? 1 : parseInt(jsonData.Carb);
         var total = fat + protein + carb;
-        total = (total == 0 ? 1 : total);
-        console.log(total);
+        total = (total == null ? 1 : total);
         this.setState({Fat: jsonData.Fat == undefined ? 0 : jsonData.Fat,
             Protein: jsonData.Protein == undefined ? 0 : jsonData.Protein,
             Carb: jsonData.Carb == undefined ? 0 : jsonData.Carb});
-        return [{
-            amount: fat,
-            percent: Math.round(fat / total * 100),
-            svg: {
-                fill: '#ff4500',
-            },
-            key: 'pie-$1',
-            label: 'Fat'
-        },
-        {
-            amount: protein,
-            percent: Math.round(protein / total * 100),
-            svg: {
-                fill: '#000080',
-            },
-            key: 'pie-$2',
-            label: 'Protein'
-        },
-        {
-            amount: carb,
-            percent: Math.round(carb / total * 100),
-            svg: {
-                fill: '#ffa500',
-            },
-            key: 'pie-$3',
-            label: 'Carb'
-        }]
+        return {
+            dataSets: [{
+                values: [
+                    {value: fat, id: 1},
+                    {value: protein, id: 2},
+                    {value: carb, id: 3}
+                ],
+                label: 'Pie dataset',
+                config: {
+                    colors: [processColor('#ff4500'), processColor('#000080'), processColor('#ffa500'), processColor('#8CEAFF'), processColor('#FF8C9D')],
+                    valueTextSize: 20,
+                    valueTextColor: processColor('green'),
+                    sliceSpace: 5,
+                    selectionShift: 13
+                }
+            }]
+        }
     }
-
 };
 
 const resetB = NavigationActions.reset({

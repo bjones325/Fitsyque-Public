@@ -14,9 +14,9 @@ export default class ImageGallery extends React.Component {
         super(props);
         this.state = {
             isVisible: false,
-            data: null,
+            data: [],
             selectedData: null,
-            imageIndex: null,
+            imageIndex: 1,
             imageData: null
         };
         this.requestImageData(new Date());
@@ -43,9 +43,10 @@ export default class ImageGallery extends React.Component {
                 this.setState({
                     data: responseJson.data,
                     selectedData: responseJson.data[0],
-                    imageIndex: 0
+                    imageData: null,
+                    imageIndex: 1
                 });
-                this.getImageData(0);
+                this.getImageData(1);
             }
         })
         .catch((error) => {
@@ -72,24 +73,40 @@ export default class ImageGallery extends React.Component {
             <View style={styles.container}>
                 <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => this.requestImageData(date)}
                     plusPress={() => this.setState({isVisible: true})} />
+                <View style={styles.movePhoto}>
                 <TouchableOpacity onPress={() => {
                     var index = this.state.imageIndex;
-                    index = index - 1 < 0 ? 0 : index - 1;
+                    index = index - 1 < 1 ? 1 : index - 1;
                     this.setState({imageIndex: index});
                     this.getImageData(index);
                 }}>
                     <Icon name="chevron-left" style={{fontSize: 36}}/>
-                </TouchableOpacity >
-                <Text> {this.state.imageIndex} </Text>
-                <Image source={this.state.imageData} style={{ width: 150, height: 150 }} />
-                <TouchableOpacity onPress={() => {
-                    var index = this.state.imageIndex;
-                    index = index + 2 < this.state.data.length ? index + 1 : this.state.data.length;
-                    this.setState({imageIndex: index});
-                    this.getImageData(index);
-                }}>
-                    <Icon name="chevron-right" style={{fontSize: 36}}/>
-                </TouchableOpacity >
+                    </TouchableOpacity >
+                    <Text style={{fontSize: 36}}> {this.state.imageIndex} </Text>
+                    <TouchableOpacity onPress={() => {
+                        var index = this.state.imageIndex;
+                        if (this.state.data.length != 0) {
+                            index = index + 1 < this.state.data.length ? index + 1 : this.state.data.length - 1;
+                        }
+                        this.setState({imageIndex: index});
+                        this.getImageData(index - 1);
+                    }}>
+                        <Icon name="chevron-right" style={{fontSize: 36}}/>
+                    </TouchableOpacity >
+                </View>
+                <Image source={this.state.imageData} style={{ width: 250, height: 250 }} />
+                {this.state.imageIndex < this.state.data.length + 1 ?
+                    <View>
+                        <Text> Calf: {this.state.data[this.state.imageIndex].Calf} </Text>
+                        <Text> Thigh: {this.state.data[this.state.imageIndex].Thigh} </Text>
+                        <Text> Hip: {this.state.data[this.state.imageIndex].Hip} </Text>
+                        <Text> Waist: {this.state.data[this.state.imageIndex].Waist} </Text>
+                        <Text> Chest: {this.state.data[this.state.imageIndex].Chest} </Text>
+                        <Text> Bicep: {this.state.data[this.state.imageIndex].Bicep} </Text>
+                    </View>
+                    :
+                    <View />
+                }
                 <Modal
                     style = {styles.modal}
                     isVisible={this.state.isVisible}
@@ -134,4 +151,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flex: 1
     },
+
+    movePhoto: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        flex: 1,
+        flexDirection: 'row'
+    }
 });

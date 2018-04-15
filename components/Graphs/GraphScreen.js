@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage} from 'react-native';
+import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import TopBar from '../TopBar';
 import Modal from "react-native-modal";
@@ -96,8 +96,8 @@ export default class GraphScreen extends React.Component {
                 {Object.keys(this.state.fullData).length === 0 ?
                     <Text style={styles.emptyText}> No Workouts Logged </Text>
                 :
-                <View>
-                    <GraphChart data={this.getDataSet(this.state.selectedWorkout.Name, this.state.selectedValueSet[1])}/>
+                <View style={{width: WINDOW.width, height: 400}}>
+                    <GraphChart data={this.state.graphData}/>
                 </View>
                 }
 
@@ -135,6 +135,7 @@ export default class GraphScreen extends React.Component {
                                     this.setState({
                                         selectedValueSet: item
                                     })
+                                    this.getDataSet(this.state.selectedWorkout.Name, item[1])
                                 }}>
                                 <Text style={item[0] == this.state.selectedValueSet[0] ? styles.selectedItem : styles.item}>{item[0]}</Text></TouchableOpacity>}
                         }
@@ -157,15 +158,36 @@ export default class GraphScreen extends React.Component {
 
     getDataSet = (workoutName, index) => {
         var data = [];
-        if(this.state.fullData == null) return [];
-        if(this.state.fullData[workoutName] == null) return [];
-        if (index == null | index == undefined) return [];
-        var setData = this.state.fullData[workoutName];
-        this.state.fullData[workoutName].map(function(item) {
-            data.push(item[index])
-        })
-        console.log(data);
-        return data;
+        if(this.state.fullData != null) {
+            if(this.state.fullData[workoutName] != null) {
+                if (index != null && index != undefined) {
+                    var setData = this.state.fullData[workoutName];
+                    this.state.fullData[workoutName].map(function(item) {
+                        data.push({y: item[index]})
+                    })
+                }
+            }
+        }
+        var returnval = {
+            dataSets: [{
+              values: data,
+              label: 'Company X',
+              config: {
+                lineWidth: 2,
+                drawCircles: false,
+                highlightColor: processColor('red'),
+                color: processColor('red'),
+                drawFilled: false,
+                fillColor: processColor('black'),
+                fillAlpha: 60,
+                    valueTextSize: 15,
+                valueFormatter: "##.000",
+              }
+            }],
+          }
+        this.setState({
+            graphData: returnval
+        })     
     }
 
     parseData = (jsonData) => {

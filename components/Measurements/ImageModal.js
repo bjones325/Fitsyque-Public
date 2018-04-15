@@ -72,7 +72,6 @@ export default class ImageModal extends React.Component {
           };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
            
             if (response.didCancel) {
               console.log('User cancelled image picker');
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         borderRadius: 25,
-        height: 450, 
+        height: 650, 
         width: 250,
     }
 });

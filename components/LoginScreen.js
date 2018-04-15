@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
         fontWeight: "300",
         fontSize: 38,
         paddingTop: 50,
-        flex: 2
+        flex: 2,
+        paddingHorizontal: 10
     },
 
     text: {

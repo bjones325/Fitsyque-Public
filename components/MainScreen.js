@@ -21,6 +21,12 @@ export default class Splash extends React.Component {
                             <Text> Analysis </Text>
                         </TouchableOpacity>
                     </View>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('GoalsMain')}>
+                            <Icon name="check-square" style={styles.icon} />
+                                <Text> Goals </Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.iconRow}>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('MacronutrientMain')}>
                             <Icon name="pie-chart" style={styles.icon} />
@@ -58,7 +64,6 @@ const styles = StyleSheet.create({
 
     iconSet: {
         flex: 2,
-        paddingTop: 150,
         flexDirection: 'column'
     },
 

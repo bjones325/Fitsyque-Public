@@ -1,0 +1,31 @@
+PODS:
+  - Charts (3.1.1):
+    - Charts/Core (= 3.1.1)
+  - Charts/Core (3.1.1)
+  - SwiftyJSON (4.0.0)
+
+DEPENDENCIES:
+  - Charts (from `https://github.com/danielgindi/Charts.git`)
+  - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
+
+EXTERNAL SOURCES:
+  Charts:
+    :git: https://github.com/danielgindi/Charts.git
+  SwiftyJSON:
+    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
+
+CHECKOUT OPTIONS:
+  Charts:
+    :commit: 6b730a035c6daf19f695aedbb0d7e5e441fdede2
+    :git: https://github.com/danielgindi/Charts.git
+  SwiftyJSON:
+    :commit: a1700fbb554857fabaa6278222ed31ff3aec3c1e
+    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
+
+SPEC CHECKSUMS:
+  Charts: 82c6776516b844809f55228d720129a9dc25b9f2
+  SwiftyJSON: 8cd73b154950360d79292a8dc8c0d0a85d258930
+
+PODFILE CHECKSUM: c322b775af7033cceff1550be11a3e85ed0b25f4
+
+COCOAPODS: 1.5.0
