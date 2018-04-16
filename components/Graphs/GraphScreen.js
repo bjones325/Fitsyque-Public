@@ -19,8 +19,9 @@ export default class GraphScreen extends React.Component {
             endDate: new Date(),
             workoutNames: [],
             fullData: [],
+            refresh: false
         }
-        this.requestWorkoutList(new Date(), null);
+        this.requestWorkoutList(new Date(), new Date());
     }
 
     requestWorkoutList = (beginDate, endDate) => {
@@ -42,7 +43,7 @@ export default class GraphScreen extends React.Component {
                 this.props.navigation.dispatch(resetB);
                 alert(responseJson.message);
             } else {
-                this.setState({workoutNames: responseJson.data, selectedValueSet: [], fullData: [], dataTypes: []});
+                this.setState({workoutNames: responseJson.data, selectedWorkout: {}, selectedValueSet: [], fullData: [], dataTypes: []});
             }
         })
         .catch((error) => {
@@ -102,7 +103,9 @@ export default class GraphScreen extends React.Component {
                     this.setState({
                         beginDate: begin,
                     })
-                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)}}/>
+                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)
+                }}
+                    />
                 {Object.keys(this.state.fullData).length === 0 ?
                     <Text style={styles.emptyText}> No Workouts Logged </Text>
                 :
@@ -139,14 +142,17 @@ export default class GraphScreen extends React.Component {
                     />
                     <FlatList
                         data={this.state.dataTypes}
+                        extraData={this.state.refresh}
                         keyExtractor={(item, index) => item[0]}
                         style={styles.valueSet}
                         renderItem={({item}) => {  
                                 return <TouchableOpacity onPress={() => {
-                                    this.setState({
-                                        selectedValueSet: item
-                                    })
                                     this.setGraphData(this.state.selectedWorkout.Name, item[1])
+                                    this.setState({
+                                        selectedValueSet: item,
+                                        refresh: !this.state.refresh
+                                    })
+                                    this.requestWorkoutData(this.state.selectedWorkout.ExerciseID);
                                 }}>
                                 <Text style={item[0] == this.state.selectedValueSet[0] ? styles.selectedItem : styles.item}>{item[0]}</Text></TouchableOpacity>}
                         }
@@ -171,18 +177,14 @@ export default class GraphScreen extends React.Component {
         var data = [];
         if(this.state.fullData != null) {
             if(this.state.fullData[workoutName] != null) {
-                console.log("B");
                 if (index != null && index != undefined) {
-                    console.log("C");
                     var setData = this.state.fullData[workoutName];
                     this.state.fullData[workoutName].map(function(item) {
-                        console.log("D");
                         data.push({y: item[index]})
                     })
                 }
             }
         }
-        console.log(data);
         var returnval = {
             dataSets: [{
               values: data,
@@ -223,7 +225,6 @@ export default class GraphScreen extends React.Component {
                 jsonData[i].Resistence,
             ])
         }
-        console.log(sections);
         this.setState({fullData: sections});
     }
 };
@@ -282,12 +283,10 @@ const styles = StyleSheet.create({
     valueSet: {
         alignSelf: 'flex-start',
         paddingLeft: 8,
+        flex: 1,
         borderRadius: 25,
-        borderColor: 'black',
-        borderStyle: 'solid',
-        borderWidth: 1,
         height: 150,
-        flex: 1
+        borderWidth: 1
     },
 
     wordSet: {

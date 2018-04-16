@@ -52,11 +52,6 @@ export default class GraphTopBar extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.endBar}>
-                    <TouchableOpacity style={styles.icon} onPress={() => {
-                        this.props.plusPress();
-                    }}>
-                        <Icon name="plus" style={{ fontSize: 36 }} />
-                    </TouchableOpacity>
                 </View>
             </View>
         );
