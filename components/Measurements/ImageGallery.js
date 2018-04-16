@@ -96,13 +96,14 @@ export default class ImageGallery extends React.Component {
                 </View>
                 <Image source={this.state.imageData} style={{ width: 250, height: 250 }} />
                 {this.state.imageIndex < this.state.data.length + 1 ?
-                    <View>
-                        <Text> Calf: {this.state.data[this.state.imageIndex].Calf} </Text>
-                        <Text> Thigh: {this.state.data[this.state.imageIndex].Thigh} </Text>
-                        <Text> Hip: {this.state.data[this.state.imageIndex].Hip} </Text>
-                        <Text> Waist: {this.state.data[this.state.imageIndex].Waist} </Text>
-                        <Text> Chest: {this.state.data[this.state.imageIndex].Chest} </Text>
-                        <Text> Bicep: {this.state.data[this.state.imageIndex].Bicep} </Text>
+                    <View style={styles.itemsList}>
+                        <Text style={{alignSelf: 'center', fontSize: 24}}>Measurement List </Text>
+                        <Text style={styles.text}>{'\u2022'} Calf: {this.state.data[this.state.imageIndex].Calf} </Text>
+                        <Text style={styles.text}>{'\u2022'} Thigh: {this.state.data[this.state.imageIndex].Thigh} </Text>
+                        <Text style={styles.text}>{'\u2022'} Hip: {this.state.data[this.state.imageIndex].Hip} </Text>
+                        <Text style={styles.text}>{'\u2022'} Waist: {this.state.data[this.state.imageIndex].Waist} </Text>
+                        <Text style={styles.text}>{'\u2022'} Chest: {this.state.data[this.state.imageIndex].Chest} </Text>
+                        <Text style={styles.text}>{'\u2022'} Bicep: {this.state.data[this.state.imageIndex].Bicep} </Text>
                     </View>
                     :
                     <View />
@@ -157,5 +158,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flex: 1,
         flexDirection: 'row'
+    },
+
+    itemsList: {
+        flex: 2
+    },
+
+    text: {
+        fontSize: 20,
+        padding: 5
     }
 });

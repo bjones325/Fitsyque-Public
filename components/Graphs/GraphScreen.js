@@ -1,10 +1,11 @@
 import React from 'react';
 import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import TopBar from '../TopBar';
+import GraphTopBar from './GraphTopBar';
 import Modal from "react-native-modal";
 import DropdownAlert from 'react-native-dropdownalert';
 import GraphChart from './GraphChart';
+import GraphRanges from './GraphRanges';
 const WINDOW = Dimensions.get('window')
 
 
@@ -14,17 +15,15 @@ export default class GraphScreen extends React.Component {
         this.state = {
             selectedWorkout: {},
             selectedValueSet: [],
-            date: new Date(),
-            data: [],
-            parsedData: [],
+            beginDate: new Date(),
+            endDate: new Date(),
             workoutNames: [],
-            fullData: []
+            fullData: [],
         }
-        this.requestWorkoutList(new Date());
-        this.requestWorkoutData(new Date());
+        this.requestWorkoutList(new Date(), null);
     }
 
-    requestWorkoutList = (date) => {
+    requestWorkoutList = (beginDate, endDate) => {
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch('https://fitsyque.azurewebsites.net/Graph/WorkoutList', {
                 method: "get",
@@ -32,7 +31,8 @@ export default class GraphScreen extends React.Component {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'x-access-token': token,
-                    date: date.toISOString().substring(0, 10)
+                    beginDate: this.state.beginDate.toISOString().substring(0, 10),
+                    endDate: this.state.endDate.toISOString().substring(0, 10),
                 }
             })
         })
@@ -42,7 +42,7 @@ export default class GraphScreen extends React.Component {
                 this.props.navigation.dispatch(resetB);
                 alert(responseJson.message);
             } else {
-                this.setState({workoutNames: responseJson.data});
+                this.setState({workoutNames: responseJson.data, selectedValueSet: [], fullData: [], dataTypes: []});
             }
         })
         .catch((error) => {
@@ -52,8 +52,7 @@ export default class GraphScreen extends React.Component {
         });
     }
 
-    requestWorkoutData = (date) => {
-        console.log("D:" + date);
+    requestWorkoutData = (exerciseID) => {
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch('https://fitsyque.azurewebsites.net/Graph/Data', {
                 method: "get",
@@ -61,7 +60,9 @@ export default class GraphScreen extends React.Component {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'x-access-token': token,
-                    date: date.toISOString().substring(0, 10)
+                    beginDate: this.state.beginDate.toISOString().substring(0, 10),
+                    endDate: this.state.endDate.toISOString().substring(0, 10),
+                    ExerciseID: exerciseID
                 }
             })
         })
@@ -84,23 +85,31 @@ export default class GraphScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => {
-                    this.requestWorkoutData(date);
-                    this.requestWorkoutList(date);
+                <GraphTopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(change) => {
+                    var bdate = new Date();
+                    bdate.setDate(this.state.beginDate.getDate() + change)
+                    var edate = new Date();
+                    edate.setDate(this.state.endDate.getDate() + change)
                     this.setState({
-                        selectedWorkout: {},
-                        selectedValueSet: []
+                        beginDate: bdate,
+                        endDate: edate
                     })
+                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)
                 }}
-                    plusPress={() => this.setState({isVisible: true, selectedWorkout: {}, searchInput: ""})} />
+                    
+                    plusPress={() => this.setState({selectedWorkout: {}})} />
+                <GraphRanges date={() => this.topBar.getDate()} update={(begin) => {
+                    this.setState({
+                        beginDate: begin,
+                    })
+                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)}}/>
                 {Object.keys(this.state.fullData).length === 0 ?
                     <Text style={styles.emptyText}> No Workouts Logged </Text>
                 :
-                <View style={{width: WINDOW.width, height: 400}}>
-                    <GraphChart data={this.state.graphData}/>
-                </View>
+                    <View style={{width: WINDOW.width, height: 400}}>
+                        <GraphChart data={this.state.graphData}/>
+                    </View>
                 }
-
                 <View style={styles.wordSet}>
                     <Text style={styles.listTitle}>Workouts</Text>
                     <Text style={styles.listTitle}>Stats</Text>
@@ -122,12 +131,14 @@ export default class GraphScreen extends React.Component {
                                     this.setState({
                                         selectedWorkout: item
                                     })
+                                    this.getDataTypes(item.TypeID)
+                                    this.requestWorkoutData(item.ExerciseID);
                                 }}>
                                 <Text style={item.Name == this.state.selectedWorkout.Name ? styles.selectedItem : styles.item}>{item.Name}</Text></TouchableOpacity>}
                         }
                     />
                     <FlatList
-                        data={this.getDataTypes(this.state.selectedWorkout.TypeID)}
+                        data={this.state.dataTypes}
                         keyExtractor={(item, index) => item[0]}
                         style={styles.valueSet}
                         renderItem={({item}) => {  
@@ -135,7 +146,7 @@ export default class GraphScreen extends React.Component {
                                     this.setState({
                                         selectedValueSet: item
                                     })
-                                    this.getDataSet(this.state.selectedWorkout.Name, item[1])
+                                    this.setGraphData(this.state.selectedWorkout.Name, item[1])
                                 }}>
                                 <Text style={item[0] == this.state.selectedValueSet[0] ? styles.selectedItem : styles.item}>{item[0]}</Text></TouchableOpacity>}
                         }
@@ -153,21 +164,25 @@ export default class GraphScreen extends React.Component {
         } else {
             types.push(["Duration", 4], ["Intensity", 5], ["Incline", 6], ["Resistence", 7]);
         }
-        return types;
+        this.setState({dataTypes: types});
     }
 
-    getDataSet = (workoutName, index) => {
+    setGraphData = (workoutName, index) => {
         var data = [];
         if(this.state.fullData != null) {
             if(this.state.fullData[workoutName] != null) {
+                console.log("B");
                 if (index != null && index != undefined) {
+                    console.log("C");
                     var setData = this.state.fullData[workoutName];
                     this.state.fullData[workoutName].map(function(item) {
+                        console.log("D");
                         data.push({y: item[index]})
                     })
                 }
             }
         }
+        console.log(data);
         var returnval = {
             dataSets: [{
               values: data,
@@ -208,9 +223,7 @@ export default class GraphScreen extends React.Component {
                 jsonData[i].Resistence,
             ])
         }
-        var result = Object.keys(sections).map(function(key) {
-            return [key, sections[key]];
-        });
+        console.log(sections);
         this.setState({fullData: sections});
     }
 };
@@ -296,5 +309,5 @@ const styles = StyleSheet.create({
         height: 400,
         padding: 20,
         alignSelf: 'center',
-    }
+    },
 });

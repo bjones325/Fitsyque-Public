@@ -60,7 +60,7 @@ export default class MacroScreen extends React.PureComponent {
         return (
             <View style={styles.container}>
                 <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => this.requestMacroData(date)}
-                    plusPress={() => this.setState({isVisible: true, selectedWorkout: {}, searchInput: ""})} />
+                    plusPress={() => this.setState({isVisible: true, selectedWorkout: {}})} />
                 <View>
                     {(this.state.Fat + this.state.Protein + this.state.Carb) == 0 ?
                     <Text style={{textAlign: 'center', padding: 20}}> No Macronutrient Data </Text>
