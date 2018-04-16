@@ -15,11 +15,11 @@ export default class MacroScreen extends React.PureComponent {
         var total = parseInt(this.props.amount.Fat) + parseInt(this.props.amount.Protein) + parseInt(this.props.amount.Carb);
         switch(type) {
             case 1:
-                return (this.props.amount.Fat / total) * 100
+                return ((this.props.amount.Fat / total) * 100).toFixed(1)
             case 2:
-                return (this.props.amount.Protein / total) * 100
+                return ((this.props.amount.Protein / total) * 100).toFixed(1)
             case 3:
-                return (this.props.amount.Carb / total) * 100
+                return ((this.props.amount.Carb / total) * 100).toFixed(1)
         }
         return 0
     }
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     description: {
         color: 'gray', //#841584
         fontSize: 16,
+        paddingTop: 10
     },
     
     container: {

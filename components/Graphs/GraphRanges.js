@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, TextInput, Text, Button } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Button } from 'react-native';
 
 export default class GraphRanges extends React.Component {
     constructor(props) {
@@ -13,14 +13,14 @@ export default class GraphRanges extends React.Component {
 
     render() {
         return (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                 <TouchableOpacity onPress={() => {
                     this.setState({
                         selectedRange: 0
                     })
                     this.props.update(this.props.date());
                 }}>
-                    <Text style={this.state.selectedRange == 0 ? styles.selected : styles.regular}> Today </Text>
+                    <Text style={this.state.selectedRange == 0 ? styles.selected : styles.regular}>Today</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     var date = new Date();
@@ -30,7 +30,7 @@ export default class GraphRanges extends React.Component {
                     })
                     this.props.update(date);
                 }}>
-                    <Text style={this.state.selectedRange == 1 ? styles.selected : styles.regular}> Week </Text>
+                    <Text style={this.state.selectedRange == 1 ? styles.selected : styles.regular}>Week</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     var date = new Date();
@@ -40,7 +40,7 @@ export default class GraphRanges extends React.Component {
                     })
                     this.props.update(date);
                 }}>
-                    <Text style={this.state.selectedRange == 2 ? styles.selected : styles.regular}> Month </Text>
+                    <Text style={this.state.selectedRange == 2 ? styles.selected : styles.regular}>Month</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     var date = new Date();
@@ -50,7 +50,7 @@ export default class GraphRanges extends React.Component {
                     })
                     this.props.update(date);
                 }}>
-                    <Text style={this.state.selectedRange == 3 ? styles.selected : styles.regular}> 6 Months </Text>
+                    <Text style={this.state.selectedRange == 3 ? styles.selected : styles.regular}>6 Months</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     var date = new Date();
@@ -60,7 +60,7 @@ export default class GraphRanges extends React.Component {
                     })
                     this.props.update(date);
                 }}>
-                    <Text style={this.state.selectedRange == 4 ? styles.selected : styles.regular}> Year </Text>
+                    <Text style={this.state.selectedRange == 4 ? styles.selected : styles.regular}>Year</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -72,10 +72,22 @@ export default class GraphRanges extends React.Component {
 
 const styles = StyleSheet.create({
     selected: {
-        color: 'green'
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: 'green',
+        color: 'white',
+        textAlign: 'center',
+        paddingHorizontal: 3
     },
 
     regular: {
-        color: 'black'
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: 'lightblue',
+        color: 'black',
+        textAlign: 'center',
+        paddingHorizontal: 3
     }
 })

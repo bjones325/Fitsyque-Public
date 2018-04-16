@@ -149,6 +149,7 @@ export default class DaySchedule extends React.Component {
                                             var length = this.state.sections[section.title].length - 1
                                             this.props.openModal(this.state.sections[section.title][length]);
                                         }}>
+                                            <Text style={{color: 'green', fontSize: 12, textAlign: 'center', paddingTop: 2}}> Quick Add</Text>
                                             <Icon name="add-to-list" style={styles.plus} />
                                         </TouchableOpacity>
                                     </View>
@@ -254,6 +255,7 @@ const styles = StyleSheet.create({
     plus: {
         fontSize: 32,
         color: 'green',
+        alignSelf: 'center'
     },
 
     standaloneRowFront: {

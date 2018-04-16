@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
     },
 
     item: {
-        paddingVertical: 5,
+        paddingVertical: 7,
         fontSize: 16,
         height: 26,
     },
 
     selectedItem: {
-        paddingVertical: 5,
+        paddingVertical: 7,
         fontSize: 16,
         height: 26,
         color: 'green'
