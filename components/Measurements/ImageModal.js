@@ -49,9 +49,14 @@ export default class ImageModal extends React.Component {
             } else {
                 if(this.state.imageSource != null) {
                     AsyncStorage.setItem('@app:imageID:' + responseJson.id, this.state.imageSource.uri);
-                    console.log("STORING: " + responseJson.id + "@@" + this.state.imageSource.uri);
                 }
-                this.props.onClose("success", "Success", "Your measurements has been added!");
+                if (this.state.Waist/this.state.Hip > 0.95) {
+                    this.props.onClose("warn", "Warning", "Your hip to waist ratio is very high. This might indicate a cardiovascular difficulty.");
+                } else if(this.state.Waist/this.state.Hip < 0.7) {
+                    this.props.onClose("warn", "Warning", "Your hip to waist ratio is low, which is overall dangerous to your health.");
+                } else {
+                    this.props.onClose("success", "Success", "Your measurements has been added!");
+                }
             }
         })
         .catch((error) => {

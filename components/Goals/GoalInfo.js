@@ -51,11 +51,11 @@ export default class GoalInfo extends React.Component {
                     reps += this.state.data[i].Reps;
                 }
                 reps /= this.state.data.length;
-                if (reps > 15) {
-                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 14) / 14)})
+                if (reps > 14) {
+                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 14) / 14).toFixed(1)})
                 }
-                if (reps < 5) {
-                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((6 - reps) / 6).toFixed(0)})
+                if (reps < 6) {
+                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((6 - reps) / 6).toFixed(1)})
                 }
                 break;
             case "Strength":
@@ -64,11 +64,11 @@ export default class GoalInfo extends React.Component {
                     reps += this.state.data[i].Reps;
                 }
                 reps /= this.state.data.length;
-                if (reps > 9) {
-                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 8) / 8).toFixed(0)})
+                if (reps > 8) {
+                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 8) / 8).toFixed(1)})
                 }
-                if (reps < 5) {
-                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((4 - reps) / 4).toFixed(0)})
+                if (reps < 4) {
+                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((4 - reps) / 4).toFixed(1)})
                 }
                 break;
             case "Tone":
@@ -80,14 +80,14 @@ export default class GoalInfo extends React.Component {
                 }
                 reps /= this.state.data.length;
                 weight /= this.state.data.length;
-                if (reps > 21) {
-                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 20) / 20).toFixed(0)})
+                if (reps > 20) {
+                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 20) / 20).toFixed(1)})
                 }
-                if (reps < 11) {
-                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((12 - reps) / 12).toFixed(0)})
+                if (reps < 12) {
+                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((12 - reps) / 12).toFixed(1)})
                 }
-                if (weight > 21) {
-                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((reps - 20) / 20).toFixed(0)})
+                if (weight > 20) {
+                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((weight - 20) / 20).toFixed(1)})
                 }
                 break;
             case "Cut":
@@ -98,14 +98,14 @@ export default class GoalInfo extends React.Component {
                     TypeID += this.state.data[i].TypeID;
                 }
                 reps /= this.state.data.length;
-                if (reps > 21) {
-                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 20) / 20).toFixed(0)})
+                if (reps > 20) {
+                    fixes.push({Key: 1, Text: "Decrease Rep Values by " + ((reps - 20) / 20).toFixed(1)})
                 }
-                if (reps < 11) {
-                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((12 - reps) / 12).toFixed(0)})
+                if (reps < 12) {
+                    fixes.push({Key: 1, Text: "Increase Rep Values by " + ((12 - reps) / 12).toFixed(1)})
                 }   
-                if (weight > 21) {
-                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((reps - 20) / 20).toFixed(0)})
+                if (weight > 20) {
+                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((weight - 20) / 20).toFixed(1)})
                 }
                 if (TypeID < (this.state.data.length/2)) {
                     fixes.push({Key: 1, Text: "Increase Cardio Exercises to atleast once every other day"});
@@ -117,11 +117,11 @@ export default class GoalInfo extends React.Component {
                     reps += this.state.data[i].Reps;
                 }
                 reps /= this.state.data.length;
-                if (reps < 17) {
+                if (reps < 18) {
                     fixes.push({Key: 1, Text: "Increase Rep Values by " + ((18 - reps) / 18).toFixed(0)})
                 }
-                if (weight > 26) {
-                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((reps - 25) / 25).toFixed(0)})
+                if (weight > 25) {
+                    fixes.push({Key: 1, Text: "Decrease Weight Values by " + ((weight - 25) / 25).toFixed(0)})
                 }
                 if (TypeID < (this.state.data.length/3)) {
                     fixes.push({Key: 1, Text: "Increase Cardio Exercises to atleast once every 3 days"});

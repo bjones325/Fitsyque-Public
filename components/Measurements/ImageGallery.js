@@ -95,7 +95,7 @@ export default class ImageGallery extends React.Component {
                     </TouchableOpacity >
                 </View>
                 <Image source={this.state.imageData} style={{ width: 250, height: 250 }} />
-                {this.state.imageIndex < this.state.data.length + 1 ?
+                {this.state.imageIndex < this.state.data.length ?
                     <View style={styles.itemsList}>
                         <Text style={{alignSelf: 'center', fontSize: 24}}>Measurement List </Text>
                         <Text style={styles.text}>{'\u2022'} Calf: {this.state.data[this.state.imageIndex].Calf} </Text>
