@@ -57,9 +57,6 @@ export default class LoginScreen extends React.Component {
             <ImageBackground
             style={{
                 flex: 1,
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
                 justifyContent: 'center',
             }}
             source={require("../Assets/jump.jpg")}

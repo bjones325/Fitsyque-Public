@@ -86,7 +86,7 @@ export default class DaySchedule extends React.Component {
         return (
             <View style={styles.view}>
                 {this.state.loading ?
-                    <Spinner isVisible={this.state.loading} size={40} type={"ThreeBounce"} color={"#FF0000"} />
+                    <Spinner style={{alignSelf: 'center'}} isVisible={this.state.loading} size={40} type={"ThreeBounce"} color={"#FF0000"} />
                     :
                     this.state.data.length == 0 ?
                         <Text style={{textAlign: 'center'}}> No Workouts Logged </Text>

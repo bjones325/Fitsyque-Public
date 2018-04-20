@@ -3,6 +3,7 @@ import { Text, Platform, Dimensions, StyleSheet, View, FlatList, TouchableOpacit
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import DropdownAlert from 'react-native-dropdownalert';
+import GoalInfo from './GoalInfo';
 const WINDOW = Dimensions.get('window')
 
 
@@ -17,7 +18,7 @@ export default class GoalsMain extends React.Component {
                 {Name: "Cut"}, 
                 {Name: "Increase Endurance"}, 
             ],
-            selectedGoal: ""
+            selectedGoal: "Continue Routine"
         };
     }
 
@@ -43,12 +44,14 @@ export default class GoalsMain extends React.Component {
                                 return <TouchableOpacity onPress={() => {
                                     this.setState({
                                         selectedGoal: item.Name
-                                        })
+                                    })
+
                                     }}>
                                 <Text style={this.state.selectedGoal == item.Name ? styles.selectedItem : styles.item}>{item.Name}</Text></TouchableOpacity>}
                         }
                     />
                 </View>
+                <GoalInfo goalType={this.state.selectedGoal}/>
             </View>
         );
     }
