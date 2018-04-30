@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
+import { Keyboard, Slider, Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
 
@@ -61,9 +61,23 @@ export default class StrengthModal extends React.Component {
             <View style={styles.container}>
                 <Text style={{ paddingTop: 5, fontSize: 22 }}>Set Workout Stats</Text>
                 <Text style={{paddingTop: 10, fontSize: 16}}> {this.props.selectedWorkout.name}</Text>
-                <WorkoutDetailSelector text="Reps" getValue={this.state.Reps} updateValue={(value) => { this.setState({ Reps: value }) }} />
-                <WorkoutDetailSelector text="Sets" getValue={this.state.Sets} updateValue={(value) => { this.setState({ Sets: value }) }} />
-                <WorkoutDetailSelector text="Weight" getValue={this.state.Weight} updateValue={(value) => { this.setState({ Weight: value }) }} />
+                <Text> Sets: {this.state.Sets} </Text>
+                <Slider style={{width: 200}} value={this.props.initial.Sets} minimumValue={1} maximumValue={5} step={1} onValueChange={(value) => {Keyboard.dismiss(); this.setState({ Sets: value })}}/>
+                <Text> Reps: {this.state.Reps} </Text>
+                <Slider style={{width: 200}} value={this.props.initial.Reps} minimumValue={1} maximumValue={25} step={1} onValueChange={(value) => {Keyboard.dismiss(); this.setState({ Reps: value })}}/>
+                <Text>Weight:</Text>
+                <TextInput
+                        borderRadius={25}
+                        textAlign={'center'}
+                        style={styles.textInput}
+                        keyboardType='numeric'
+                        placeholder="0"
+                        onChangeText={(text) => {
+                            this.setState({ Weight: isNaN(parseInt(text)) ? 0 : parseInt(text)})}
+                        }
+                        value={this.state.Weight.toString()}
+                        maxLength={3}
+                    />
                 <Button
                     title="Confirm"
                     color="green"
@@ -93,5 +107,15 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+
+    textInput: {
+        width: 50,
+        height: 35,
+        borderColor: 'black',
+        borderRadius: 8,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        color: 'black'
+    },
 });

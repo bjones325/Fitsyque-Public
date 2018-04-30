@@ -51,7 +51,7 @@ export default class WorkoutListModal extends React.Component {
             <TextInput
                 borderRadius = {25}
                 placeholder="Workout Name"
-                style={{height: 40}}
+                style={{height: 40, width: 100}}
                 onChangeText={(text) => this.setState({searchInput: text})}
             />
             <FlatList
@@ -88,13 +88,13 @@ const styles = StyleSheet.create({
     item: {
         paddingVertical: 7,
         fontSize: 16,
-        height: 26,
+        height: 30,
     },
 
     selectedItem: {
         paddingVertical: 7,
         fontSize: 16,
-        height: 26,
+        height: 30,
         color: 'green'
     },
 });

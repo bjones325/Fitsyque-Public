@@ -15,13 +15,13 @@ export default class WorkoutModal extends React.PureComponent {
             selectedWorkout: {},
             index: 0,
             initial: {
-                Sets: 0,
-                Reps: 0,
+                Sets: 1,
+                Reps: 1,
                 Weight: 0,
-                Duration: 0,
-                Intensity: 0,
-                Incline: 0,
-                Resistence: 0
+                Duration: 1,
+                Intensity: 1,
+                Incline: 1,
+                Resistence: 1
             }
         };
     }

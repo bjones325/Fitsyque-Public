@@ -26,7 +26,7 @@ export default class WorkoutsMain extends React.Component {
                     getData={(date) => this.child.requestWorkoutData(date)}
                     plusPress={() => {
                         this.setState({ isVisible: true });
-                        this.modal.open([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0)
+                        this.modal.open([0, 1, 1, 0, 0, 1, 1, 1, 0, 0], 0)
                     }}
                 />
                 <DaySchedule
@@ -54,7 +54,7 @@ export default class WorkoutsMain extends React.Component {
                     }}
                 />
                 </View>
-                <DropdownAlert defaultContainer={{ padding: 8, paddingTop: Platform.OS === 'android' ? 0 : 10, flexDirection: 'row' }}
+                <DropdownAlert defaultContainer={{ flex: 2, padding: 8, paddingTop: Platform.OS === 'android' ? 0 : 10, flexDirection: 'row' }}
                     ref={ref => this.dropdown = ref} startDelta={WINDOW.height + 200} endDelta={WINDOW.height} />
             </View>
         );
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.7)'
     },
 
     modalContainer: {
@@ -80,16 +81,4 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderColor: "rgba(0, 0, 0, 0.1)"
       },
-
-    /*modalContainer: {
-        //justifyContent: 'center',
-        //alignItems: 'center',
-        //alignSelf: 'center',
-        backgroundColor: 'white',
-        flex: 1,
-        flexDirection: 'column',
-        borderRadius: 25,
-        maxHeight: 450, 
-        width: 250,
-    }*/
 });

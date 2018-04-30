@@ -10,7 +10,7 @@
     "immutability-helper": "^2.6.6",
     "lodash": "^4.17.5",
     "react": "^16.3.1",
-    "react-native": "^0.55.2",
+    "react-native": "^0.55.3",
     "react-native-calendars": "^1.18.2",
     "react-native-charts-wrapper": "^0.4.3",
     "react-native-drawer": "^2.5.0",
@@ -21,10 +21,12 @@
     "react-native-photo-browser": "^0.4.0",
     "react-native-spinkit": "^1.1.1",
     "react-native-swipe-list-view": "^1.0.7",
+    "react-native-swipeable": "^0.6.0",
     "react-native-tags": "^1.0.0",
     "react-native-uikit": "^0.1.6",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^1.5.11",
+    "swipeable": "^1.0.5",
     "uikit": "^3.0.0-beta.42"
   },
   "devDependencies": {

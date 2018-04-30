@@ -28,7 +28,7 @@ export default class WorkoutsMain extends React.Component {
             <View style={styles.barView}>
                 <View style={styles.invisible}>
                     <TouchableOpacity onPress={() => this.props.nav.goBack()}>
-                        <Icon name='arrow-left' style={{ fontSize: 36 }} />
+                        <Icon name='arrow-left' style={styles.iconType} />
                     </TouchableOpacity >
                 </View>
                 <View style={styles.centerBar}>
@@ -56,7 +56,7 @@ export default class WorkoutsMain extends React.Component {
                     <TouchableOpacity style={styles.icon} onPress={() => {
                         this.props.plusPress();
                     }}>
-                        <Icon name="plus" style={{ fontSize: 36 }} />
+                        <Icon name="plus" style={styles.iconType} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
     text: {
         color: 'red', //#841584
-        fontWeight: 'bold',
+        fontWeight: "300",
         fontSize: 24,
     },
 
@@ -105,6 +105,10 @@ const styles = StyleSheet.create({
 
     icon: {
         justifyContent: 'flex-end',
-        //alignSelf: 'flex-end',
     },
+
+    iconType: {
+        fontSize: 36,
+        color: 'silver'
+    }
 });

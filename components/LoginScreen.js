@@ -1,6 +1,6 @@
 import React from 'react';
-import {TouchableOpacity, ImageBackground, Platform, Dimensions, Text, View, Button, TextInput, StyleSheet, AsyncStorage} from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import {Keyboard, KeyboardAvoidingView, TouchableOpacity, ImageBackground, Platform, Dimensions, Text, View, Button, TextInput, StyleSheet, AsyncStorage} from 'react-native';
+import {NavigationActions } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
 var Spinner = require('react-native-spinkit');
@@ -17,6 +17,7 @@ export default class LoginScreen extends React.Component {
     }
 
     login = () => {
+        Keyboard.dismiss();
         this.setState({visibleAnimation: true});
         fetch('https://fitsyque.azurewebsites.net/Login', {
             method: "post",
@@ -57,12 +58,21 @@ export default class LoginScreen extends React.Component {
             <ImageBackground
             style={{
                 flex: 1,
+                flexDirection: 'column',
                 justifyContent: 'center',
+                alignItems: 'center',
             }}
             source={require("../Assets/jump.jpg")}
             >
                 <View style = {styles.background}>
-                    <TouchableOpacity style = {styles.backButton} onPress={() => this.props.navigation.goBack()}>
+                <KeyboardAvoidingView style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                }} behavior="padding" keyboardVerticalOffset={80} enabled>
+                    <TouchableOpacity style = {styles.backButton} onPress={() => {
+                        this.props.navigation.goBack();
+                        Keyboard.dismiss();
+                    }}>
                         <Icon name='arrow-left' style={{ fontSize: 36, color: 'silver' }} />
                     </TouchableOpacity >
                     <Text style={styles.titleText}>
@@ -73,12 +83,21 @@ export default class LoginScreen extends React.Component {
                             <Text style={styles.text}>
                                 Username
                             </Text>
-                            <TextInput onChangeText={(text) => this.setState({username: text})}
+                            <TextInput 
+                                returnKeyType = {"next"}
+                                onChangeText={(text) => this.setState({username: text})}
+                                onSubmitEditing={() => { this.secondTextInput.focus(); }}
+                                blurOnSubmit={false}
                                 style = {styles.textBox}/>
                             <Text style={styles.text}>
                                 Password
                             </Text>
-                            <TextInput onChangeText={(text) => this.setState({password: text})} 
+                            <TextInput
+                                secureTextEntry={true}
+                                returnKeyType = {"done"}
+                                ref={(input) => { this.secondTextInput = input; }}
+                                onSubmitEditing={this.login}
+                                onChangeText={(text) => this.setState({password: text})} 
                                 style = {styles.textBox}/>
                             <Button title="Login" onPress={this.login} />
                             <View>
@@ -86,10 +105,12 @@ export default class LoginScreen extends React.Component {
                             </View>
                         </View>
                     </View>
-                </View>
                 <DropdownAlert     defaultContainer={{ padding: 8, paddingTop: Platform.OS === 'android' ? 0 : 10, flexDirection: 'row' }}
                 ref={ref => this.dropdown = ref} startDelta={WINDOW.height + 200} endDelta={WINDOW.height}/>
+                </KeyboardAvoidingView>
+            </View>
             </ImageBackground>
+
         );
     }
 };

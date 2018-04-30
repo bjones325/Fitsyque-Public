@@ -2,12 +2,15 @@ import React from 'react';
 import { Text, View, Button, TextInput, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {YellowBox} from 'react-native';
+
 
 
 export default class Splash extends React.Component {
 
     constructor(props) {
         super(props);
+        console.disableYellowBox = true;
     }
 
     render() {
@@ -64,8 +67,6 @@ export default class Splash extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
-
     topText: {
         flex: 1,
         color: 'silver',
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     icon: {
         alignSelf: 'center',
         fontSize: 64,
-        color: 'silver'
+        color: 'firebrick'
     },
 
     touch: {
@@ -111,7 +112,9 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        color: 'silver'
+        color: 'firebrick',
+        fontWeight: 'bold',
+        fontSize: 18,
     }
 
 });
