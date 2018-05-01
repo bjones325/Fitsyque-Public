@@ -3,6 +3,7 @@ import { ImageBackground, Platform, TouchableOpacity, Dimensions, Text, View, Bu
 import { StackNavigator } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Network from "./Network";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -25,33 +26,25 @@ export default class LoginScreen extends React.Component {
             return;
         }
         this.setState({ visibleAnimation: true });
-        fetch('https://fitsyque.azurewebsites.net/Register', {
-            method: "post",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+        Network.noAuthCall("https://fitsyque.azurewebsites.net/Register",
+            (responseJson) => {
+                this.props.navigation.pop();
+                this.dropdown.alertWithType('success', "Account Created!", "You have successfully registered your account!");
             },
-            body: JSON.stringify({
+            (responseJson) => {
+                this.dropdown.alertWithType('error', "Error", responseJson.reason);
+            },
+            () => {
+                alert("There was an internal error while connecting! Please restart the app.")
+            },
+            () => {
+                this.setState({visibleAnimation: false});
+            },
+            JSON.stringify({
                 login: this.state.username,
                 password: this.state.password,
                 email: this.state.email
-            })
-        })
-            .then((response) =>
-                response.json())
-            .then((responseJson) => {
-                this.setState({ visibleAnimation: false });
-                if (responseJson.success) {
-                    this.props.navigation.pop();
-                    this.dropdown.alertWithType('success', "Account Created!", "You have successfully registered your account!");
-                } else {
-                    this.dropdown.alertWithType('error', "Error", responseJson.reason);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("There was an internal error while connecting! Please restart the app.")
-            });
+            }));
     }
 
     render() {

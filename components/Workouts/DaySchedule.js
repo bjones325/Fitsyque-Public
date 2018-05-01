@@ -3,6 +3,7 @@ import { Text, View, Button, TextInput, StyleSheet, SectionList, AsyncStorage, L
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Entypo';
 import WorkoutItem from './WorkoutItem';
+import Network from "../Network";
 var Spinner = require('react-native-spinkit');
 
 
@@ -13,7 +14,7 @@ export default class DaySchedule extends React.Component {
             loading: true,
             data: [{ data: ['null'], title: "null" }]
         };
-        this.requestWorkoutData();
+        this.requestWorkoutData(new Date());
     }
 
     componentDidMount() {
@@ -24,62 +25,48 @@ export default class DaySchedule extends React.Component {
         this.props.onRef(undefined)
     }
 
-    requestWorkoutData = () => {
+    requestWorkoutData = (date) => {
         this.setState({ loading: true });
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/DayList', {
-                method: "get",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token,
-                    date: this.props.date().toISOString().substring(0, 10)
-                }
-            })
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                if (!responseJson.success) {
-                    this.props.navigation.dispatch(resetB);
-                    alert(responseJson.message);
-                } else {
-                    console.log(responseJson.data)
-                    this.parseData(responseJson.data);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("There was an internal error while connecting! Please restart the app.")
+        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "get",
+            {
+                date: date.toISOString().substring(0, 10)
+            },
+            null,
+            (responseJson) => {
+                this.parseData(responseJson.data);
+            },
+            (responseJson) => {
+                this.props.navigation.dispatch(resetB);
+                alert(responseJson.message);
+            },
+            () => {
+                alert("There was an internal error while connecting! Please restart the app.");
+            },
+            () => {
+                this.setState({ loading: false });
             });
     }
 
     deleteEntry = (id) => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/DayList', {
-                method: "delete",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token,
-                    date: this.props.date().toISOString().substring(0, 10)
-                },
-                body: JSON.stringify({
-                    RecordID: id
-                })
-            })
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                if (!responseJson.success) {
-                    console.log("failure");
-                } else {
-                    this.requestWorkoutData();
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("There was an internal error while connecting! Please restart the app.")
-            });
+        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "delete",
+        {
+            date: this.props.date()
+        },
+        JSON.stringify({
+            RecordID: id
+        }),
+        (responseJson) => {
+            this.requestWorkoutData(this.props.date());
+        },
+        (responseJson) => {
+            alert("Failed to delete?");
+        },
+        () => {
+            alert("There was an internal error while connecting! Please restart the app.");
+        },
+        () => {
+            this.setState({ loading: false });
+        });
     }
 
     render() {

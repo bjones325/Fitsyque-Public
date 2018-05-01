@@ -3,6 +3,7 @@ import {Keyboard, KeyboardAvoidingView, TouchableOpacity, ImageBackground, Platf
 import {NavigationActions } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Network from "./Network";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -19,38 +20,24 @@ export default class LoginScreen extends React.Component {
     login = () => {
         Keyboard.dismiss();
         this.setState({visibleAnimation: true});
-        fetch('https://fitsyque.azurewebsites.net/Login', {
-            method: "post",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+        Network.noAuthCall("https://fitsyque.azurewebsites.net/Login",
+            (responseJson) => {
+                this.props.navigation.dispatch(resetMain);
+                AsyncStorage.setItem('@app:session', responseJson.token);
             },
-            body: JSON.stringify({
+            (responseJson) => {
+                this.dropdown.alertWithType('error', "Error", responseJson.reason);
+            },
+            () => {
+                alert("There was an internal error while connecting! Please restart the app.")
+            },
+            () => {
+                this.setState({visibleAnimation: false});
+            },
+            JSON.stringify({
                 login: this.state.username,
                 password: this.state.password
-            })
-        })
-        .then((response) => 
-            response.json())
-        .then((responseJson) => {
-            if(responseJson.success) {
-                AsyncStorage.setItem('@app:session', responseJson.token);
-                this.props.navigation.dispatch(resetMain);
-            } else if (responseJson.reason === 'Invalid Inputs' || 
-                responseJson.reason === "Incorrect password" ||
-                responseJson.reason === "Non-valid username") {
-                this.dropdown.alertWithType('error', "Error", responseJson.reason);
-            } else {
-                this.dropdown.alertWithType('error', "Error", "There was a networking error. Please try later!");
-            }
-            this.setState({visibleAnimation: false});
-        })
-        .catch((error) => {
-            console.log(error);
-            console.log(responseJson);
-            this.setState({visibleAnimation: false});
-            alert("There was an internal error while connecting! Please restart the app.")
-        });
+            }));
     }
 
     render() {

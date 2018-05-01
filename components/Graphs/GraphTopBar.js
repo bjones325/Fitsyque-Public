@@ -27,7 +27,7 @@ export default class GraphTopBar extends React.Component {
             <View style={styles.barView}>
                 <View style={styles.invisible}>
                     <TouchableOpacity onPress={() => this.props.nav.goBack()}>
-                        <Icon name='arrow-left' style={{ fontSize: 36 }} />
+                        <Icon name='arrow-left' style={{ fontSize: 36, color: 'silver' }} />
                     </TouchableOpacity >
                 </View>
                 <View style={styles.centerBar}>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
     text: {
         color: 'red', //#841584
-        fontWeight: 'bold',
+        fontWeight: "300",
         fontSize: 24,
     },
 

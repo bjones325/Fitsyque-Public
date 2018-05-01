@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
+import Network from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -18,30 +19,21 @@ export default class WorkoutListModal extends React.Component {
     }
 
     requestWorkoutData = () => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/WorkoutList', {
-                method: "get",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token
-                }
-            })
-        })
-        .then((response) => 
-            response.json())
-        .then((responseJson) => {
-            if (!responseJson.success) {
-                alert("There was an error connecting to the server! Please try later.");
-                return;
-            }
-            this.setState({data: responseJson.data});
-        })
-        .catch((error) => {
-            console.log(error);
-            console.log(responseJson);
-            alert("There was an internal error while connecting! Please restart the app.")
-        });
+        Network.authCall("https://fitsyque.azurewebsites.net/WorkoutList", "get",
+            null,
+            null,
+            (responseJson) => {
+                this.setState({data: responseJson.data});
+            },
+            (responseJson) => {
+                this.props.navigation.dispatch(resetB);
+                alert(responseJson.message);
+            },
+            () => {
+                alert("There was an internal error while connecting! Please restart the app.")
+            },
+            () => {
+            });
     }
 
     render() {
