@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import GraphTopBar from './GraphTopBar';
+import TopBar from '../TopBar';
 import Modal from "react-native-modal";
 import DropdownAlert from 'react-native-dropdownalert';
 import GraphChart from './GraphChart';
@@ -85,7 +85,7 @@ export default class GraphScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <GraphTopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(change) => {
+                <TopBar endIcon={false} nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(change) => {
                     var bdate = new Date();
                     bdate.setDate(this.state.beginDate.getDate() + change)
                     var edate = new Date();

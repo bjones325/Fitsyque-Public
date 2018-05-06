@@ -53,11 +53,15 @@ export default class WorkoutsMain extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.endBar}>
+                {this.props.endIcon ?
                     <TouchableOpacity style={styles.icon} onPress={() => {
                         this.props.plusPress();
                     }}>
                         <Icon name="plus" style={styles.iconType} />
                     </TouchableOpacity>
+                :
+                    <View />
+                }
                 </View>
             </View>
         );
