@@ -11,15 +11,15 @@ export default class Network {
             },
             body: body
         })
-            .then((response) =>
+        .then((response) =>
                 response.json())
             .then((responseJson) => {
-                onFinish();
                 if (responseJson.success) {
                     onSuccess(responseJson);
                 } else {
                     onFailure(responseJson);
                 }
+                onFinish();
             })
             .catch((error) => {
                 console.log(error);
@@ -42,12 +42,12 @@ export default class Network {
         .then((response) =>
             response.json())
         .then((responseJson) => {
-            onFinish();
             if (responseJson.success) {
                 onSuccess(responseJson);
             } else {
                 onFailure(responseJson);
             }
+            onFinish();
         })
         .catch((error) => {
             console.log(error);

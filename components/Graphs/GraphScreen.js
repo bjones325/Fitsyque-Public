@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import DropdownAlert from 'react-native-dropdownalert';
 import GraphChart from './GraphChart';
 import GraphRanges from './GraphRanges';
+import Network from '../Network'
 const WINDOW = Dimensions.get('window')
 
 
@@ -24,7 +25,7 @@ export default class GraphScreen extends React.Component {
         this.requestWorkoutList(new Date(), new Date());
     }
 
-    requestWorkoutList = (beginDate, endDate) => {
+    requestWorkoutList = () => {
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch('https://fitsyque.azurewebsites.net/Graph/WorkoutList', {
                 method: "get",
@@ -48,7 +49,6 @@ export default class GraphScreen extends React.Component {
         })
         .catch((error) => {
             console.log(error);
-            this.setState({isVisible: false});
             alert("There was an internal error while connecting! Please restart the app.")
         });
     }
@@ -78,7 +78,6 @@ export default class GraphScreen extends React.Component {
         })
         .catch((error) => {
             console.log(error);
-            this.setState({isVisible: false});
             alert("There was an internal error while connecting! Please restart the app.")
         });
     }
@@ -95,7 +94,7 @@ export default class GraphScreen extends React.Component {
                         beginDate: bdate,
                         endDate: edate
                     })
-                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)
+                    this.requestWorkoutList()
                 }}
                     
                     plusPress={() => this.setState({selectedWorkout: {}})} />
@@ -103,7 +102,7 @@ export default class GraphScreen extends React.Component {
                     this.setState({
                         beginDate: begin,
                     })
-                    this.requestWorkoutList(this.state.beginDate, this.state.endDate)
+                    this.requestWorkoutList()
                 }}
                     />
                 {Object.keys(this.state.fullData).length === 0 ?
@@ -126,7 +125,8 @@ export default class GraphScreen extends React.Component {
                         flex: 1,
                         borderRadius: 25,
                         height: 150,
-                        borderWidth: 1
+                        borderWidth: 1,
+                        borderColor: 'silver'
                     }}
                     keyExtractor={(item, index) => item.Name}
                     renderItem={({item}) => {  
@@ -180,7 +180,8 @@ export default class GraphScreen extends React.Component {
                 if (index != null && index != undefined) {
                     var setData = this.state.fullData[workoutName];
                     this.state.fullData[workoutName].map(function(item) {
-                        data.push({y: item[index]})
+                        var value = item[index]
+                        data.push({y: value, marker: value})
                     })
                 }
             }
@@ -191,14 +192,12 @@ export default class GraphScreen extends React.Component {
               label: 'Company X',
               config: {
                 lineWidth: 2,
-                drawCircles: false,
-                highlightColor: processColor('red'),
+                drawCircles: true,
+                circleColor: processColor('red'),
+                circleRadius: 3,
                 color: processColor('red'),
-                drawFilled: false,
-                fillColor: processColor('black'),
-                fillAlpha: 60,
-                    valueTextSize: 15,
-                valueFormatter: "##.000",
+                drawValues: false,
+                valueFormatter: '#'
               }
             }],
           }
@@ -259,6 +258,7 @@ const styles = StyleSheet.create({
     
     container: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.7)'
     },
 
     modal: {
@@ -271,6 +271,7 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 16,
         height: 25,
+        color: 'silver'
     },
 
     selectedItem: {
@@ -280,13 +281,24 @@ const styles = StyleSheet.create({
         color: 'green'
     },
 
+    workoutNames: {
+        alignSelf: 'flex-start',
+        paddingLeft: 8,
+        flex: 1,
+        borderRadius: 25,
+        height: 150,
+        borderWidth: 1,
+        borderColor: 'silver'
+    },
+
     valueSet: {
         alignSelf: 'flex-start',
         paddingLeft: 8,
         flex: 1,
         borderRadius: 25,
         height: 150,
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: 'silver'
     },
 
     wordSet: {
@@ -297,7 +309,7 @@ const styles = StyleSheet.create({
 
     listTitle: {
         paddingBottom: 5,
-        color: 'black', //#841584
+        color: 'silver',
         fontWeight: '200',
         fontSize: 26,
         width: 120,

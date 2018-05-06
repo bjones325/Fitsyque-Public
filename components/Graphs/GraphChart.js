@@ -17,27 +17,36 @@ class GraphChart extends React.Component {
     this.state = {
       legend: {
         enabled: false,
-        textColor: processColor('blue'),
-        textSize: 0,
-        position: 'BELOW_CHART_RIGHT',
-        form: 'SQUARE',
-        formSize: 14,
-        xEntrySpace: 10,
-        yEntrySpace: 5,
-        formToTextSpace: 5,
-        wordWrapEnabled: true,
-        maxSizePercent: 0.5,
-        custom: {
-          colors: [processColor('red'), processColor('blue'), processColor('green')],
-          labels: ['Company X', 'Company Y', 'Company Dashed']
-        }
       },
       marker: {
-        enabled: true,
+        enabled: false,
         digits: 2,
         backgroundTint: processColor('teal'),
 	      markerColor: processColor('#F0C0FF8C'),
         textColor: processColor('white'),
+      },
+      xAxis: {
+        granularityEnabled: true,
+        granularity : 1,
+        textSize: 15,
+        textColor: processColor('silver'),
+        axisMinimum: 0
+      },
+      yAxis: {
+        left: {
+          granularityEnabled: true,
+          granularity : 1,
+          textSize: 15,
+          textColor: processColor('silver'),
+          axisMinimum: 0
+        },
+        right: {
+          granularityEnabled: true,
+          granularity : 1,
+          textSize: 15,
+          textColor: processColor('silver'),
+          axisMinimum: 0
+        }
       }
     };
   }
@@ -49,23 +58,27 @@ class GraphChart extends React.Component {
     } else {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
     }
-
-    console.log(event.nativeEvent)
   }
 
   render() {
     return (
       <View style={{flex: 1}}>
-
         <View style={styles.container}>
           <LineChart
             style={styles.chart}
             data={this.props.data}
             chartDescription={{text: ''}}
             legend={this.state.legend}
-            marker={this.state.marker}
             xAxis={this.state.xAxis}
+            yAxis={this.state.yAxis}
             drawGridBackground={true}
+            marker={{
+              enabled: true,
+              digits: 0,
+              markerColor: processColor('#FFF'),
+              textSize: 14,
+              textColor: processColor('black'),
+            }}
             borderColor={processColor('teal')}
             borderWidth={1}
             drawBorders={true}
@@ -77,13 +90,15 @@ class GraphChart extends React.Component {
             scaleYEnabled={true}
             pinchZoom={true}
             doubleTapToZoomEnabled={true}
+            chartBackgroundColor={processColor('rgba(0,0,0,0)')}
+            gridBackgroundColor={processColor('rgba(0,0,0,0.0)')}
 
             dragDecelerationEnabled={true}
             dragDecelerationFrictionCoef={0.99}
 
             keepPositionOnRotation={false}
-            onSelect={this.handleSelect.bind(this)}
             onChange={(event) => console.log(event.nativeEvent)}
+            
           />
         </View>
 
@@ -97,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   chart: {
-    flex: 1
+    flex: 1,
   }
 });
 

@@ -67,9 +67,6 @@ export default class GraphRanges extends React.Component {
     }
 }
 
-
-
-
 const styles = StyleSheet.create({
     selected: {
         borderColor: 'black',
@@ -78,7 +75,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'green',
         color: 'white',
         textAlign: 'center',
-        paddingHorizontal: 3
+        paddingHorizontal: 3,
+        overflow: "hidden"
     },
 
     regular: {
@@ -88,6 +86,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightblue',
         color: 'black',
         textAlign: 'center',
-        paddingHorizontal: 3
+        paddingHorizontal: 3,
+        overflow: "hidden"
     }
 })
