@@ -22,7 +22,7 @@ export default class Splash extends React.Component {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
-            source={require("../Assets/main.jpeg")}
+            source={require("../../Assets/main.jpeg")}
             >
                     <TouchableOpacity style={{
                         padding: 20,

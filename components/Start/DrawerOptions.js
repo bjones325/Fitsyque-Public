@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Button, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
-export default class Options extends React.Component {
+export default class DrawerOptions extends React.Component {
 
     constructor(props) {
         super(props);

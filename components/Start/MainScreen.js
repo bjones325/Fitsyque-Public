@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Drawer from 'react-native-drawer'
 import Main from './Main';
-import Options from './Options';
+import DrawerOptions from './DrawerOptions';
 
 export default class Splash extends React.Component {
 
@@ -19,7 +19,7 @@ export default class Splash extends React.Component {
         return (
             <Drawer
                 type="overlay"
-                content={<Options
+                content={<DrawerOptions
                     navigation={this.props.navigation}
                     />}
                 tapToClose={true}

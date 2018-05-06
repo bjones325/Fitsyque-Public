@@ -15,9 +15,6 @@ class GraphChart extends React.Component {
     super(props);
 
     this.state = {
-      legend: {
-        enabled: false,
-      },
       marker: {
         enabled: false,
         digits: 2,
@@ -68,7 +65,7 @@ class GraphChart extends React.Component {
             style={styles.chart}
             data={this.props.data}
             chartDescription={{text: ''}}
-            legend={this.state.legend}
+            legend={{enabled: false}}
             xAxis={this.state.xAxis}
             yAxis={this.state.yAxis}
             drawGridBackground={true}

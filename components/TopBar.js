@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 
     text: {
         color: 'red', //#841584
-        fontWeight: "300",
+        fontWeight: "400",
         fontSize: 24,
     },
 

@@ -1,8 +1,8 @@
 import { StackNavigator } from 'react-navigation';
-import Splash from './Splash';
-import LoginScreen from './LoginScreen';
-import RegisterScreen from './RegisterScreen';
-import MainScreen from './MainScreen';
+import Splash from './Start/Splash';
+import LoginScreen from './Start/LoginScreen';
+import RegisterScreen from './Start/RegisterScreen';
+import MainScreen from './Start/MainScreen';
 import WorkoutsMain from './Workouts/WorkoutsMain';
 import MacroScreen from './Macros/MacroScreen';
 import GraphScreen from './Graphs/GraphScreen';

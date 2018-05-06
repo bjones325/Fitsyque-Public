@@ -12,7 +12,7 @@ export default class Splash extends React.Component{
                     height: '100%',
                     justifyContent: 'center',
                 }}
-                source={require("../Assets/bentover.jpg")}
+                source={require("../../Assets/bentover.jpg")}
                 >
                 <View style={Styles.background}>
                         <Text style={Styles.titleText}>

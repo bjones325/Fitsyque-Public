@@ -3,7 +3,7 @@ import {Keyboard, KeyboardAvoidingView, TouchableOpacity, ImageBackground, Platf
 import {NavigationActions } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import Network from "./Network";
+import Network from "../Network";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -49,7 +49,7 @@ export default class LoginScreen extends React.Component {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
-            source={require("../Assets/jump.jpg")}
+            source={require("../../Assets/jump.jpg")}
             >
                 <View style = {styles.background}>
                 <KeyboardAvoidingView style={{
