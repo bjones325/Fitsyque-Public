@@ -2,9 +2,6 @@ import React from 'react';
 import {Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Modal from "react-native-modal";
-import WorkoutListModal from './WorkoutListModal';
-import CardioModal from './CardioModal';
-import StrengthModal from './StrengthModal';
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -65,31 +62,6 @@ export default class WorkoutModal extends React.PureComponent {
                 animationIn = "fadeIn"
                 animationOut = "fadeOut"
             >
-            <View style={styles.modalContainer}>
-            {this.state.index == 0 ?
-                <WorkoutListModal
-                    next={(workout) => {
-                        this.setState({
-                            selectedWorkout: workout,
-                            index: 1
-                        });
-                    }}
-                /> :
-                this.state.selectedWorkout.TypeID == 0 ?
-                    <StrengthModal
-                        date={() => this.props.date()}
-                        selectedWorkout={this.state.selectedWorkout}
-                        initial={this.state.initial}
-                        onClose={(a,b,c) => {this.props.onClose(true, a,b,c)}}
-                    /> :
-                    <CardioModal
-                        date={() => this.props.date()}
-                        selectedWorkout={this.state.selectedWorkout}
-                        initial={this.state.initial}
-                        onClose={(a,b,c) => {this.props.onClose(true, a,b,c)}}
-                    />
-            }
-            </View>
             </Modal>
         );
     }

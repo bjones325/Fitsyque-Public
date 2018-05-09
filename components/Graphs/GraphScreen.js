@@ -2,8 +2,6 @@ import React from 'react';
 import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import TopBar from '../TopBar';
-import Modal from "react-native-modal";
-import DropdownAlert from 'react-native-dropdownalert';
 import GraphChart from './GraphChart';
 import GraphRanges from './GraphRanges';
 import Network from '../Network'

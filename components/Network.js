@@ -26,7 +26,7 @@ export default class Network {
                 onError();
             });
     }
-
+ 
     static authCall(url, type, specialHeaders, body, onSuccess, onFailure, onError, onFinish) {
         AsyncStorage.getItem('@app:session').then((token) => {
             return fetch(url, {

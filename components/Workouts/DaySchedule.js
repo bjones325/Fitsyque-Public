@@ -123,7 +123,8 @@ export default class DaySchedule extends React.Component {
                 jsonData[i].Incline,
                 jsonData[i].Resistence,
                 jsonData[i].ExerciseID,
-                jsonData[i].RecordID
+                jsonData[i].RecordID,
+                jsonData[i].Name
             ])
         }
         var result = Object.keys(sections).map(function (key) {
