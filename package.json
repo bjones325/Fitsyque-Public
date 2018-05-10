@@ -13,6 +13,7 @@
     "react-native": "^0.55.3",
     "react-native-calendars": "^1.18.2",
     "react-native-charts-wrapper": "^0.4.3",
+    "react-native-collapsible": "^0.11.2",
     "react-native-drawer": "^2.5.0",
     "react-native-dropdownalert": "^3.4.0",
     "react-native-image-gallery": "^2.1.5",

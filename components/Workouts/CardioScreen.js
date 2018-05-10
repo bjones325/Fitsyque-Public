@@ -6,7 +6,7 @@ import Network from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
-export default class StrengthModal extends React.Component {
+export default class StrengthScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SwipeRow } from 'react-native-swipe-list-view';
+import Collapsible from 'react-native-collapsible';
 
 export default class WorkoutItem extends React.Component {
     constructor(props) {
@@ -9,18 +10,19 @@ export default class WorkoutItem extends React.Component {
 
     render() {
         return (
+            <Collapsible collapsed={this.props.collapsed}>
                 <SwipeRow
                     disableRightSwipe={true}
                     disableLeftSwipe={false}
                     rightOpenValue={-75}
+                    recalculateHiddenLayout={true}
                 >
                 <TouchableOpacity
                     style={styles.standaloneRowBack}
                     onPress={() => this.props.onDelete()}
                     >
-                    <View>
-                        <Text style={{ fontWeight: 'bold' }}> Delete </Text>
-                    </View>
+                    <Text style={{ fontWeight: 'bold' }}>Delete</Text>
+                
                 </TouchableOpacity>
                     <View style={styles.standaloneRowFront}>
                         {this.props.item[0] == 0 ?
@@ -30,6 +32,7 @@ export default class WorkoutItem extends React.Component {
                         }
                     </View>
                 </SwipeRow>
+            </Collapsible>
         );
     }
 }
@@ -54,5 +57,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         padding: 15,
+        flex: 1
     }
 });

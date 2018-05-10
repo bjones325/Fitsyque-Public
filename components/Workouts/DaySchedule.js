@@ -12,7 +12,7 @@ export default class DaySchedule extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            data: [{ data: ['null'], title: "null" }]
+            data: [{ data: ['null'], expanded: false, title: "null" }]
         };
         this.requestWorkoutData(new Date());
     }
@@ -82,16 +82,24 @@ export default class DaySchedule extends React.Component {
                         stickySectionHeadersEnabled={false}
                         style={styles.flatlist}
                         keyExtractor={(item, index) => item + index}
-                        renderItem={({item}) => 
-                            <WorkoutItem item={item} onDelete={() => this.deleteEntry(item[9])}/>
+                        renderItem={({item, i, section}) => {
+                            return <WorkoutItem item={item} collapsed={section.collapsed} onDelete={() => this.deleteEntry(item[9])}/>
+                        }
                         }
                         renderSectionHeader={({ section }) =>
                         <View style={styles.header}>
-                            <Text style={styles.headerText}> {section.title} </Text>
+                            <TouchableOpacity 
+                            onPress={() => {
+                                section.collapsed = !section.collapsed;
+                                this.forceUpdate();
+                            }}
+                            style={{padding: 4, flex: 3}}>
+                                <Text style={styles.headerText}> {section.title} </Text>
+                            </TouchableOpacity>
                             <View style={styles.endHeader}>
                                 <TouchableOpacity style={styles.iconTouch} onPress={() => {
                                     var length = this.state.sections[section.title].length - 1
-                                    this.props.openModal(this.state.sections[section.title][length]);
+                                    //this.props.openModal(this.state.sections[section.title][length]);
                                 }}>
                                     <Text style={{color: 'lawngreen', fontSize: 12, textAlign: 'center', paddingTop: 2}}>Quick Add</Text>
                                     <Icon name="add-to-list" style={styles.plus} />
@@ -128,7 +136,7 @@ export default class DaySchedule extends React.Component {
             ])
         }
         var result = Object.keys(sections).map(function (key) {
-            return { title: key, data: sections[key] };
+            return { title: key, collapsed: true, data: sections[key] };
         });
         this.setState({
             data: result,
@@ -153,27 +161,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         maxHeight: 530,
         justifyContent: 'center',
-        zIndex: 21,
         overflow: 'hidden'
     },
 
     flatlist: {
         flex: 1,
-        zIndex: 20
-    },
-
-    item: {
-        color: 'darkgray', //#841584
-        fontSize: 16,
-        paddingLeft: 10
     },
 
     headerText: {
         color: 'silver', //#841584
         fontWeight: 'bold',
         fontSize: 22,
-        padding: 4,
-        flex: 3
     },
 
     header: {
