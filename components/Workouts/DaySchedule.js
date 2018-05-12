@@ -94,7 +94,7 @@ export default class DaySchedule extends React.Component {
                         renderSectionHeader={({ section }) =>
                         <View style={styles.header}>
                             <TouchableOpacity
-                                style={{padding: 4, flex: 3}}
+                                style={{paddingLeft: 8, flex: 3}}
                                 onPress={() => {
                                     section.collapsed = !section.collapsed;
                                     this.forceUpdate();

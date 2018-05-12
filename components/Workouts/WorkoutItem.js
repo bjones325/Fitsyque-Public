@@ -36,7 +36,7 @@ export default class WorkoutItem extends React.Component {
                 </View>
                 <View style={styles.standaloneRowFront}>
                         {this.props.item[0] == 0 ?
-                            <Text style={styles.itemText}>{'\u2022'} Sets: {this.props.item[1]}, Reps: {this.props.item[2]}, Weight: {this.props.item[3]} </Text>
+                            <Text style={styles.itemText}>{'\u2022'} {this.props.item[2]} x {this.props.item[3]}lb, {this.props.item[1]} sets </Text>
                             :
                             <Text style={styles.item}>{'\u2022'} Sets: {this.props.item[1]}, Reps: {this.props.item[2]}, Duration: {this.props.item[4]}, Intensity: {this.props.item[5]}, Incline: {this.props.item[6]}, Resistence: {this.props.item[7]} </Text>
                         }

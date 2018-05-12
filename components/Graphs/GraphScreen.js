@@ -130,7 +130,8 @@ export default class GraphScreen extends React.Component {
                     renderItem={({item}) => {  
                                 return <TouchableOpacity onPress={() => {
                                     this.setState({
-                                        selectedWorkout: item
+                                        selectedWorkout: item,
+                                        selectedValueSet: [],
                                     })
                                     this.getDataTypes(item.TypeID)
                                     this.requestWorkoutData(item.ExerciseID);
@@ -245,7 +246,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
+        paddingHorizontal: 5,
     },
 
     text: {
