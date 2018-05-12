@@ -25,13 +25,12 @@ export default class WorkoutsMain extends React.Component {
                         this.props.navigation.navigate("WorkoutListScreen", {
                             date: this.topBar.getDate()
                         });
-                        //this.modal.open([0, 1, 1, 0, 0, 1, 1, 1, 0, 0], 0)
                     }}
                 />
                 <DaySchedule
                     onRef={ref => (this.child = ref)}
                     date={() => this.topBar.getDate()}
-                    openModal={(data) => {
+                    openModal={(data, update) => {
                         var destination = (data[0] == 0 ? "StrengthScreen" : "CardioScreen");
                         this.props.navigation.navigate(destination, {
                             date: this.topBar.getDate(),
@@ -45,7 +44,9 @@ export default class WorkoutsMain extends React.Component {
                             selectedWorkout: {
                                 name: data[10],
                                 ExerciseID: data[8]
-                            }
+                            },
+                            update: update,
+                            recordID: data[9]
                         });
                     }}
                 />
@@ -55,25 +56,6 @@ export default class WorkoutsMain extends React.Component {
         );
     }
 };
-
-/*
-
-                    <WorkoutModal
-                        onRef={ref => (this.modal = ref)}
-                        date={() => this.topBar.getDate()}
-                        isVisible={this.state.isVisible}
-                        onClose={(update, type, header, text) => {
-                            this.setState({
-                                isVisible: false,
-                                index: 0
-                            })
-                            if (update) {
-                                this.child.requestWorkoutData(this.topBar.getDate());
-                                this.dropdown.alertWithType(type, header, text);
-                            }
-                        }}
-                    />
-                    */
 
 const styles = StyleSheet.create({
     text: {

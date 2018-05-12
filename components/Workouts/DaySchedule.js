@@ -76,30 +76,35 @@ export default class DaySchedule extends React.Component {
                     <Spinner style={{alignSelf: 'center'}} isVisible={this.state.loading} size={40} type={"ThreeBounce"} color={"#FF0000"} />
                     :
                     this.state.data.length == 0 ?
-                        <Text style={{textAlign: 'center'}}> No Workouts Logged </Text>
+                        <Text style={{textAlign: 'center'}}>No Workouts Logged</Text>
                         :
                         <SectionList
                         stickySectionHeadersEnabled={false}
                         style={styles.flatlist}
                         keyExtractor={(item, index) => item + index}
                         renderItem={({item, i, section}) => {
-                            return <WorkoutItem item={item} collapsed={section.collapsed} onDelete={() => this.deleteEntry(item[9])}/>
-                        }
+                            return <WorkoutItem
+                                item={item}
+                                collapsed={section.collapsed}
+                                onDelete={() => this.deleteEntry(item[9])}
+                                onUpdate={() => this.props.openModal(item, 1)}
+                                />
+                            }
                         }
                         renderSectionHeader={({ section }) =>
                         <View style={styles.header}>
-                            <TouchableOpacity 
-                            onPress={() => {
-                                section.collapsed = !section.collapsed;
-                                this.forceUpdate();
-                            }}
-                            style={{padding: 4, flex: 3}}>
-                                <Text style={styles.headerText}> {section.title} </Text>
+                            <TouchableOpacity
+                                style={{padding: 4, flex: 3}}
+                                onPress={() => {
+                                    section.collapsed = !section.collapsed;
+                                    this.forceUpdate();
+                                }}>
+                                <Text style={styles.headerText}>{section.title}</Text>
                             </TouchableOpacity>
                             <View style={styles.endHeader}>
                                 <TouchableOpacity style={styles.iconTouch} onPress={() => {
                                     var length = this.state.sections[section.title].length - 1
-                                    //this.props.openModal(this.state.sections[section.title][length]);
+                                    this.props.openModal(this.state.sections[section.title][length], 0);
                                 }}>
                                     <Text style={{color: 'lawngreen', fontSize: 12, textAlign: 'center', paddingTop: 2}}>Quick Add</Text>
                                     <Icon name="add-to-list" style={styles.plus} />

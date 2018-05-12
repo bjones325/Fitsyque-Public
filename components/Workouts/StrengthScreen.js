@@ -29,7 +29,9 @@ export default class StrengthScreen extends React.Component {
                 Duration: 0,
                 Intensity: 0,
                 Incline: 0,
-                Resistence: 0
+                Resistence: 0,
+                Update: this.props.navigation.getParam('update', 0),
+                RecordID: this.props.navigation.getParam('recordID', 0)
             }),
             (responseJson) => {
                 this.props.navigation.dispatch(submit);
@@ -80,7 +82,7 @@ export default class StrengthScreen extends React.Component {
                             maxLength={3}
                         />
                     <Button
-                        title="Add Workout"
+                        title= {this.props.navigation.getParam('update', 0) == 0 ? "Add Workout" : "Update Workout"}
                         color="green"
                         style={styles.confirmButton}
                         onPress={() => {

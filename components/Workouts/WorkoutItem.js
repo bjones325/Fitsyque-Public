@@ -12,25 +12,35 @@ export default class WorkoutItem extends React.Component {
         return (
             <Collapsible collapsed={this.props.collapsed}>
                 <SwipeRow
-                    disableRightSwipe={true}
+                    disableRightSwipe={false}
                     disableLeftSwipe={false}
+                    leftOpenValue={75}
+                    stopLeftSwipe={75}
                     rightOpenValue={-75}
+                    stopRightSwipe={-75}
                     recalculateHiddenLayout={true}
                 >
-                <TouchableOpacity
-                    style={styles.standaloneRowBack}
-                    onPress={() => this.props.onDelete()}
-                    >
-                    <Text style={{ fontWeight: 'bold' }}>Delete</Text>
-                
-                </TouchableOpacity>
-                    <View style={styles.standaloneRowFront}>
+                <View style={styles.backRow}>
+                    <TouchableOpacity
+                        style={styles.backUpdate}
+                        onPress={() => this.props.onUpdate()}
+                        >
+                        <Text style={{ fontWeight: 'bold' }}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.backDelete}
+                        onPress={() => this.props.onDelete()}
+                        >
+                        <Text style={{ fontWeight: 'bold' }}>Delete</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.standaloneRowFront}>
                         {this.props.item[0] == 0 ?
                             <Text style={styles.itemText}>{'\u2022'} Sets: {this.props.item[1]}, Reps: {this.props.item[2]}, Weight: {this.props.item[3]} </Text>
                             :
                             <Text style={styles.item}>{'\u2022'} Sets: {this.props.item[1]}, Reps: {this.props.item[2]}, Duration: {this.props.item[4]}, Intensity: {this.props.item[5]}, Incline: {this.props.item[6]}, Resistence: {this.props.item[7]} </Text>
                         }
-                    </View>
+                </View>
                 </SwipeRow>
             </Collapsible>
         );
@@ -50,13 +60,31 @@ const styles = StyleSheet.create({
         backgroundColor: 'darkgray',
     },
 
-    standaloneRowBack: {
+    backRow: {
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 50,
+        flexDirection: 'row',
+        flex: 1
+    },
+
+    backUpdate: {   
+        alignItems: 'center',
+        backgroundColor: 'green',
+        height: 50,
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        flex: 1
+    },
+
+    backDelete: {
         alignItems: 'center',
         backgroundColor: 'red',
         height: 50,
-        flexDirection: 'row',
         justifyContent: 'flex-end',
-        padding: 15,
+        flexDirection: 'row',
+        paddingHorizontal: 15,
         flex: 1
     }
 });
