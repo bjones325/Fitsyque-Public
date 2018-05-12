@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, TextInput, Text, Button } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import RootStack from './Router'
+import Modal from "react-native-modal";
+import { Calendar } from 'react-native-calendars';
 
 export default class WorkoutsMain extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             date: new Date(),
+            jumpDate: new Date()
         };
     }
 
@@ -40,9 +42,15 @@ export default class WorkoutsMain extends React.Component {
                     }}>
                         <Icon name="chevron-left" style={{ fontSize: 36 }} />
                     </TouchableOpacity >
-                    <Text style={styles.text}>
-                        {this.state.date.toISOString().substring(0, 10)}
-                    </Text>
+                    <TouchableOpacity onPress={() => {
+                        this.setState({
+                            visible: true
+                        })
+                    }}>
+                        <Text style={styles.text}>
+                            {this.state.date.toISOString().substring(0, 10)}
+                        </Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         var date = this.state.date;
                         date.setDate(date.getDate() + 1);
@@ -63,7 +71,42 @@ export default class WorkoutsMain extends React.Component {
                     <View />
                 }
                 </View>
+                <Modal
+                    isVisible={this.state.visible}
+                    style = {styles.modal}
+                    backdropColor = 'gray'
+                    backdropOpacity = {0.5}
+                    onBackdropPress = {() => {
+                        this.setState({visible: false})
+                    }}
+                    animationIn = "fadeIn"
+                    animationOut = "fadeOut">
+                    <View style={styles.modalContainer}>
+                        <Text style={{ paddingTop: 10, fontSize: 24, paddingBottom: 10, fontWeight: '600' }}>Select a Date</Text>
+                        <Calendar
+                            current={this.state.jumpDate.toISOString().substring(0,10)}
+                            markedDates={{[this.state.jumpDate.toISOString().substring(0, 10)]: {selected: true}}}
+                            onDayPress={(day) => {
+                                this.setState({
+                                    jumpDate: new Date(day.dateString)
+                                })
+                            }}
+                            monthFormat={'MM-yyyy'}
+                            hideExtraDays={true}
+                            firstDay={1}
+                            hideDayNames={true}
+                            />
+                        <Button title="Jump to Date" onPress={() => {
+                            this.setState({
+                                date: this.state.jumpDate,
+                                visible: false
+                            })
+                            this.props.getData(this.state.date);
+                        }}/>
+                    </View>
+                </Modal>
             </View>
+            
         );
     }
 }
@@ -114,5 +157,21 @@ const styles = StyleSheet.create({
     iconType: {
         fontSize: 36,
         color: 'silver'
-    }
+    },
+
+    modal: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        flex: 1
+    },
+
+    modalContainer: {
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        borderRadius: 25,
+        height: 400,
+        width: 250,
+    },
 });

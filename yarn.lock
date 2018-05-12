@@ -4237,7 +4237,7 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-calendars@^1.18.2:
+react-native-calendars@^1.19.3:
   version "1.19.3"
   resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.19.3.tgz#4a9a6ec9d695b9f5f6003d80fe6c0930453e89eb"
   dependencies:

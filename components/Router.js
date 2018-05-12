@@ -2,6 +2,8 @@ import { StackNavigator } from 'react-navigation';
 import Splash from './Start/Splash';
 import LoginScreen from './Start/LoginScreen';
 import RegisterScreen from './Start/RegisterScreen';
+import Contact from './Start/Contact';
+import About from './Start/About';
 import MainScreen from './Start/MainScreen';
 import WorkoutsMain from './Workouts/WorkoutsMain';
 import MacroScreen from './Macros/MacroScreen';
@@ -21,6 +23,12 @@ export const RootStack = StackNavigator({
     },
     Register: {
         screen: RegisterScreen
+    },
+    Contact: {
+        screen: Contact
+    },
+    About: {
+        screen: About
     },
     MainScreen: {
         screen: MainScreen
