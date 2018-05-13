@@ -13,6 +13,8 @@ export default class WorkoutsMain extends React.Component {
         super(props);
     }
 
+
+
     render() {
         return (
             <View style={styles.container}>
@@ -26,6 +28,7 @@ export default class WorkoutsMain extends React.Component {
                             date: this.topBar.getDate()
                         });
                     }}
+                    dotURL={"https://fitsyque.azurewebsites.net/DayList/DotDates"}
                 />
                 <DaySchedule
                     onRef={ref => (this.child = ref)}

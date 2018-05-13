@@ -3,14 +3,18 @@ import { StyleSheet, TouchableOpacity, View, Text, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Modal from "react-native-modal";
 import { Calendar } from 'react-native-calendars';
+import Network from './Network';
 
 export default class WorkoutsMain extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             date: new Date(),
-            jumpDate: new Date()
+            jumpDate: new Date(),
+            calendarMonth: new Date(),
+            dotDates: {}
         };
+        this.getDotDates();
     }
 
     componentDidMount() {
@@ -23,6 +27,39 @@ export default class WorkoutsMain extends React.Component {
 
     getDate = () => {
         return this.state.date;
+    }
+
+    getDotDates = () => {
+        if (this.props.dotURL != null && this.props.dotURL != undefined) {
+            Network.authCall(this.props.dotURL, "get",
+                {
+                    date: this.state.calendarMonth.toISOString().substring(0, 10)
+                },
+                null,
+                (responseJson) => {
+                    var parsedDates = {}
+                    responseJson.data.map(item => {
+                        parsedDates[item.Date.substring(0, 10)] = {marked: true, dotColor: 'red'}
+                    })
+                    this.setState({
+                        dotDates: parsedDates
+                    })
+                },
+                (responseJson) => {
+
+                },
+                () => {
+                },
+                () => {
+                    
+                });
+        }
+    }
+
+    getMarkedDates = () => {
+        var dates = Object.assign({}, this.state.dotDates);
+        dates[this.state.jumpDate.toISOString().substring(0, 10)] = Object.assign({selected: true}, dates[this.state.jumpDate.toISOString().substring(0, 10)]);
+        return dates;
     }
 
     render() {
@@ -84,8 +121,10 @@ export default class WorkoutsMain extends React.Component {
                     <View style={styles.modalContainer}>
                         <Text style={{ paddingTop: 10, fontSize: 24, paddingBottom: 10, fontWeight: '600' }}>Select a Date</Text>
                         <Calendar
-                            current={this.state.jumpDate.toISOString().substring(0,10)}
-                            markedDates={{[this.state.jumpDate.toISOString().substring(0, 10)]: {selected: true}}}
+                            //current={this.state.jumpDate.toISOString().substring(0,10)}
+                            markedDates={
+                                this.getMarkedDates()
+                            }
                             onDayPress={(day) => {
                                 this.setState({
                                     jumpDate: new Date(day.dateString)
@@ -95,13 +134,27 @@ export default class WorkoutsMain extends React.Component {
                             hideExtraDays={true}
                             firstDay={1}
                             hideDayNames={true}
+                            onPressArrowLeft={substractMonth => {   
+                                var date = this.state.calendarMonth;
+                                date.setMonth(date.getMonth() - 1);
+                                this.setState({ calendarMonth: date });
+                                this.getDotDates();
+                                substractMonth();
+                            }}
+                            onPressArrowRight={addMonth => {
+                                var date = this.state.calendarMonth;
+                                date.setMonth(date.getMonth() + 1);
+                                this.setState({ calendarMonth: date });
+                                this.getDotDates();
+                                addMonth();
+                            }}
                             />
                         <Button title="Jump to Date" onPress={() => {
                             this.setState({
                                 date: this.state.jumpDate,
                                 visible: false
                             })
-                            this.props.getData(this.state.date);
+                            this.props.getData(this.state.jumpDate);
                         }}/>
                     </View>
                 </Modal>
