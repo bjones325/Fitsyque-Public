@@ -37,7 +37,7 @@ export default class DaySchedule extends React.Component {
             this.parseData(responseJson.data);
         }
         call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
+            //this.props.navigation.dispatch(resetB);
             alert(responseJson.message);
         }
         call.onError = () => {

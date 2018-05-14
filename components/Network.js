@@ -63,14 +63,15 @@ export default class NetworkCall {
 
     _authCall() {
         AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch(this._url, {
-                method: this._url,
+            var message = {
+                method: this._type,
                 headers: Object.assign({
                     Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }, this._extraHeaders),
-                body: this._body
-            })
+                    'Content-Type': 'application/json',
+                    'x-access-token': token
+                }, this._extraHeaders)}
+            message = this._body ? Object.assign(message, {body: this._body}) : message
+            return fetch(this._url, message)
         })
         .then((response) =>
             response.json())
