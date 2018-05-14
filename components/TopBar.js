@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View, Text, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Modal from "react-native-modal";
 import { Calendar } from 'react-native-calendars';
-import Network from './Network';
+import NetworkCall from './Network';
 
 export default class WorkoutsMain extends React.Component {
     constructor(props) {
@@ -30,29 +30,23 @@ export default class WorkoutsMain extends React.Component {
     }
 
     getDotDates = () => {
-        if (this.props.dotURL != null && this.props.dotURL != undefined) {
-            Network.authCall(this.props.dotURL, "get",
-                {
-                    date: this.state.calendarMonth.toISOString().substring(0, 10)
-                },
-                null,
-                (responseJson) => {
-                    var parsedDates = {}
-                    responseJson.data.map(item => {
-                        parsedDates[item.Date.substring(0, 10)] = {marked: true, dotColor: 'red'}
-                    })
-                    this.setState({
-                        dotDates: parsedDates
-                    })
-                },
-                (responseJson) => {
-
-                },
-                () => {
-                },
-                () => {
-                    
-                });
+        if (this.props.dotURL) {
+            var call = new NetworkCall();
+            call.url = this.props.dotURL
+            call.type = "get"
+            call.extraHeaders = {
+                date: this.state.calendarMonth.toISOString().substring(0, 10)
+            }
+            call.onSuccess = (responseJson) => {
+                var parsedDates = {}
+                responseJson.data.map(item => {
+                    parsedDates[item.Date.substring(0, 10)] = {marked: true, dotColor: 'red'}
+                })
+                this.setState({
+                    dotDates: parsedDates
+                })
+            }
+            call.execute(true);
         }
     }
 

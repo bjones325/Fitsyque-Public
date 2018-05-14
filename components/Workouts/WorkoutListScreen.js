@@ -33,7 +33,6 @@ export default class WorkoutListScreen extends React.Component {
         call.onError = () => {
             alert("There was an internal error while connecting! Please restart the app.")
         }
-
         call.execute(true)
     }
 

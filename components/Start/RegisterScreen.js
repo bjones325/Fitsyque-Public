@@ -2,7 +2,7 @@ import React from 'react';
 import { ImageBackground, Platform, TouchableOpacity, Dimensions, Text, View, Button, TextInput, StyleSheet } from 'react-native';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import NetworkCall from "../NetworkCall";
+import NetworkCall from "../Network";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 

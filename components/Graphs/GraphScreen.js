@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import TopBar from '../TopBar';
 import GraphChart from './GraphChart';
 import GraphRanges from './GraphRanges';
-import Network from '../Network'
+import NetworkCall from '../Network'
 const WINDOW = Dimensions.get('window')
 
 

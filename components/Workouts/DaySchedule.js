@@ -3,7 +3,7 @@ import { Text, View, Button, TextInput, StyleSheet, SectionList, AsyncStorage, L
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Entypo';
 import WorkoutItem from './WorkoutItem';
-import Network from "../Network";
+import NetworkCall from "../Network";
 var Spinner = require('react-native-spinkit');
 
 
@@ -27,24 +27,26 @@ export default class DaySchedule extends React.Component {
 
     requestWorkoutData = (date) => {
         this.setState({ loading: true });
-        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "get",
-            {
-                date: date.toISOString().substring(0, 10)
-            },
-            null,
-            (responseJson) => {
-                this.parseData(responseJson.data);
-            },
-            (responseJson) => {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            },
-            () => {
-                alert("There was an internal error while connecting! Please restart the app.");
-            },
-            () => {
-                this.setState({ loading: false });
-            });
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/DayList"
+        call.type = "get"
+        call.extraHeaders = {
+            date: date.toISOString().substring(0, 10)
+        }
+        call.onSuccess = (responseJson) => {
+            this.parseData(responseJson.data);
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = () => {
+            alert("There was an internal error while connecting! Please restart the app.");
+        }
+        call.onFinish = () => {
+            this.setState({ loading: false });
+        }
+        call.execute(true);
     }
 
     deleteEntry = (id) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
-import Network from "../Network";
+import NetworkCall from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -20,32 +20,32 @@ export default class StrengthScreen extends React.Component {
     }
 
     pushNewWorkout = () => {
-        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "Post", null,
-            JSON.stringify({
-                Date: this.props.date().toISOString().substring(0, 10),
-                ExerciseID: this.props.selectedWorkout.ExerciseID,
-                Sets: this.state.Sets,
-                Reps: this.state.Reps,
-                Weight: 0,
-                Duration: this.state.Duration,
-                Intensity: this.state.Intensity,
-                Incline: this.state.Incline,
-                Resistence: this.state.Resistence
-            }),
-            (responseJson) => {
-                this.props.onClose("success", "Success", "Your workout has been added!");
-            },
-            (responseJson) => {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-                //this.dropdown.alertWithType('error', "Error", responseJson.reason);
-            },
-            () => {
-                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
-            },
-            () => {
-            }
-        );
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/DayList"
+        call.type = "Post"
+        call.body = JSON.stringify({
+            Date: this.props.date().toISOString().substring(0, 10),
+            ExerciseID: this.props.selectedWorkout.ExerciseID,
+            Sets: this.state.Sets,
+            Reps: this.state.Reps,
+            Weight: 0,
+            Duration: this.state.Duration,
+            Intensity: this.state.Intensity,
+            Incline: this.state.Incline,
+            Resistence: this.state.Resistence
+        })
+        call.onSuccess = (responseJson) => {
+            this.props.onClose("success", "Success", "Your workout has been added!");
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+            //this.dropdown.alertWithType('error', "Error", responseJson.reason);
+        }
+        call.onError = () => {
+            this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+        }
+        call.execute(true);
     }
 
     render() {

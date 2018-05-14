@@ -3,7 +3,7 @@ import { Keyboard, Slider, Text, TextField, View, Button, TextInput, StyleSheet,
 import { NavigationActions } from 'react-navigation';
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import Network from "../Network";
+import NetworkCall from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -18,35 +18,34 @@ export default class StrengthScreen extends React.Component {
     }
 
     pushNewWorkout = () => {
-        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "post",
-            null,
-            JSON.stringify({
-                Date: this.props.navigation.getParam('date', new Date()).toISOString().substring(0, 10),
-                ExerciseID: this.props.navigation.getParam('selectedWorkout', 'null').ExerciseID,
-                Sets: this.state.Sets,
-                Reps: this.state.Reps,
-                Weight: this.state.Weight,
-                Duration: 0,
-                Intensity: 0,
-                Incline: 0,
-                Resistence: 0,
-                Update: this.props.navigation.getParam('update', 0),
-                RecordID: this.props.navigation.getParam('recordID', 0)
-            }),
-            (responseJson) => {
-                this.props.navigation.dispatch(submit);
-                //this.props.onClose("success", "Success", "Your workout has been added!");
-            },
-            (responseJson) => {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            },
-            () => {
-                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
-            },
-            () => {
-                
-            });
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/DayList"
+        call.type = "post"
+        call.body = JSON.stringify({
+            Date: this.props.navigation.getParam('date', new Date()).toISOString().substring(0, 10),
+            ExerciseID: this.props.navigation.getParam('selectedWorkout', 'null').ExerciseID,
+            Sets: this.state.Sets,
+            Reps: this.state.Reps,
+            Weight: this.state.Weight,
+            Duration: 0,
+            Intensity: 0,
+            Incline: 0,
+            Resistence: 0,
+            Update: this.props.navigation.getParam('update', 0),
+            RecordID: this.props.navigation.getParam('recordID', 0)
+        })
+        call.onSuccess = (responseJson) => {
+            this.props.navigation.dispatch(submit);
+            //this.props.onClose("success", "Success", "Your workout has been added!");
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = () => {
+            this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+        }
+        call.execute(true)
     }
 
     render() {
