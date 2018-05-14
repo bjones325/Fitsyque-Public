@@ -24,60 +24,48 @@ export default class GraphScreen extends React.Component {
     }
 
     requestWorkoutList = () => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/Graph/WorkoutList', {
-                method: "get",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token,
-                    beginDate: this.state.beginDate.toISOString().substring(0, 10),
-                    endDate: this.state.endDate.toISOString().substring(0, 10),
-                }
-            })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            if(!responseJson.success) {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            } else {
-                this.setState({workoutNames: responseJson.data, selectedWorkout: {}, selectedValueSet: [], fullData: [], dataTypes: []});
-            }
-        })
-        .catch((error) => {
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Graph/WorkoutList"
+        call.type = "get"
+        call.extraHeaders = {
+            beginDate: this.state.beginDate.toISOString().substring(0, 10),
+            endDate: this.state.endDate.toISOString().substring(0, 10),
+        }
+        call.onSuccess = (responseJson) => {
+            this.setState({workoutNames: responseJson.data, selectedWorkout: {}, selectedValueSet: [], fullData: [], dataTypes: []});
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = (error) => {
             console.log(error);
             alert("There was an internal error while connecting! Please restart the app.")
-        });
+        }
+        call.execute(true);
     }
 
     requestWorkoutData = (exerciseID) => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/Graph/Data', {
-                method: "get",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token,
-                    beginDate: this.state.beginDate.toISOString().substring(0, 10),
-                    endDate: this.state.endDate.toISOString().substring(0, 10),
-                    ExerciseID: exerciseID
-                }
-            })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            if(!responseJson.success) {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            } else {
-                this.parseData(responseJson.data);
-            }
-        })
-        .catch((error) => {
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Graph/Data"
+        call.type = "get"
+        call.extraHeaders = {
+            beginDate: this.state.beginDate.toISOString().substring(0, 10),
+            endDate: this.state.endDate.toISOString().substring(0, 10),
+            ExerciseID: exerciseID
+        }
+        call.onSuccess = (responseJson) => {
+            this.parseData(responseJson.data);
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = (error) => {
             console.log(error);
             alert("There was an internal error while connecting! Please restart the app.")
-        });
+        }
+        call.execute(true);
     }
 
     render() {

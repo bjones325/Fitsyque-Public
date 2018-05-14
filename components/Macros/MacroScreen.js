@@ -7,6 +7,7 @@ import Modal from "react-native-modal";
 import PieGraph from './PieGraph'
 import MacroInformation from './MacroInformation';
 import DropdownAlert from 'react-native-dropdownalert';
+import NetworkCall from '../Network';
 const WINDOW = Dimensions.get('window')
 
 
@@ -26,63 +27,44 @@ export default class MacroScreen extends React.PureComponent {
 
     requestMacroData = (date) => {
         this.setState({loading: true});
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/Macro', {
-                method: "get",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token,
-                    date: date.toISOString().substring(0, 10)
-                }
-            })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            if(!responseJson.success) {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            } else {
-                this.setState({data: this.parseData(responseJson.data)});
-                this.setState({loading: false});
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            this.setState({isVisible: false});
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Macro"
+        call.type = "get"
+        call.extraHeaders = {
+            date: date.toISOString().substring(0, 10)
+        }
+        call.onSuccess = (responseJson) => {
+            this.setState({data: this.parseData(responseJson.data)});
+            this.setState({loading: false});
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = () => {
             this.dropdown.alertWithType("error", "Internal Error", "There was an internal error while connecting! Please restart the app.");
-        });
+        }
+        call.execute(true);
     }
 
     deleteMacro = (id) => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/Macro/Delete', {
-                method: "post",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token
-                },
-                body: JSON.stringify({
-                    RecordID: id
-                })
-            })
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Macro/Delete"
+        call.type = "post"
+        call.body = JSON.stringify({
+            RecordID: id
         })
-            .then((response) =>
-                response.json()
-            )
-            .then((responseJson) => {
-                if (!responseJson.success) {
-                    alert(responseJson.message);
-                } else {
-                    this.requestMacroData(this.topBar.getDate())
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                console.log(responseJson);
-                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
-            });
+        call.onSuccess = (responseJson) => {
+            this.requestMacroData(this.topBar.getDate())
+        }
+        call.onFailure = (responseJson) => {
+            alert(responseJson.message);
+        }
+        call.onError = (responseJson) => {
+            console.log(error);
+            console.log(responseJson);
+            this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+        }
     }
 
     render() {

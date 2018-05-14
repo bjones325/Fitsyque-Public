@@ -14,40 +14,28 @@ export default class AddMacro extends React.Component {
     }
 
     pushNewMacro = () => {
-        AsyncStorage.getItem('@app:session').then((token) => {
-            return fetch('https://fitsyque.azurewebsites.net/Macro', {
-                method: "post",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-access-token': token
-                },
-                body: JSON.stringify({
-                    Date: this.props.navigation.getParam('date', new Date()).toISOString().substring(0, 10),
-                    Update: this.props.navigation.getParam('update', 0),
-                    RecordID: this.props.navigation.getParam('recordID', 0),
-                    Fat: this.state.Fat,
-                    Protein: this.state.Protein,
-                    Carb: this.state.Carb
-                })
-            })
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Macro"
+        call.type = "post"
+        call.body = JSON.stringify({
+            Date: this.props.navigation.getParam('date', new Date()).toISOString().substring(0, 10),
+            Update: this.props.navigation.getParam('update', 0),
+            RecordID: this.props.navigation.getParam('recordID', 0),
+            Fat: this.state.Fat,
+            Protein: this.state.Protein,
+            Carb: this.state.Carb
         })
-            .then((response) =>
-                response.json()
-            )
-            .then((responseJson) => {
-                if (!responseJson.success) {
-                    alert(responseJson.message);
-                } else {
-                    this.props.navigation.dispatch(resetB);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                console.log(responseJson);
-                this.setState({ isVisible: false });
-                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
-            });
+        call.onSuccess = () => {
+            this.props.navigation.dispatch(resetB);
+        }
+        call.onFailure = () => {
+            alert(responseJson.message);
+        }
+        call.onError = () => {
+            console.log(error);
+            this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+        }
+        call.execute(true);
     }
 
     render() {
