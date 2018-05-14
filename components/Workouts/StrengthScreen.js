@@ -35,7 +35,8 @@ export default class StrengthScreen extends React.Component {
             RecordID: this.props.navigation.getParam('recordID', 0)
         })
         call.onSuccess = (responseJson) => {
-            this.props.navigation.dispatch(submit);
+            this.props.navigation.pop(this.props.navigation.getParam('numPop', 2))
+            this.props.navigation.getParam('callback', null).call();
             //this.props.onClose("success", "Success", "Your workout has been added!");
         }
         call.onFailure = (responseJson) => {

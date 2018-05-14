@@ -35,6 +35,7 @@ export default class StrengthScreen extends React.Component {
             Resistence: this.state.Resistence
         })
         call.onSuccess = (responseJson) => {
+            this.props.navigation.pop(1)
             this.props.onClose("success", "Success", "Your workout has been added!");
         }
         call.onFailure = (responseJson) => {

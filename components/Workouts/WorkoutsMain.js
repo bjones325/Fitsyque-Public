@@ -7,7 +7,6 @@ import TopBar from "../TopBar";
 import DropdownAlert from 'react-native-dropdownalert';
 const WINDOW = Dimensions.get('window')
 
-
 export default class WorkoutsMain extends React.Component {
     constructor(props) {
         super(props);
@@ -23,15 +22,19 @@ export default class WorkoutsMain extends React.Component {
                     getData={(date) => this.child.requestWorkoutData(date)}
                     plusPress={() => {
                         this.props.navigation.navigate("WorkoutListScreen", {
-                            date: this.topBar.getDate()
+                            date: this.topBar.getDate(),
+                            callback: () => {
+                                this.child.requestWorkoutData(this.topBar.getDate())
+                            }
                         });
                     }}
                     dotURL={"https://fitsyque.azurewebsites.net/DayList/DotDates"}
                 />
                 <DaySchedule
                     onRef={ref => (this.child = ref)}
+                    nav={this.props.navigation}
                     date={() => this.topBar.getDate()}
-                    openModal={(data, update) => {
+                    openModal={(data, update, numPop) => {
                         var destination = (data[0] == 0 ? "StrengthScreen" : "CardioScreen");
                         this.props.navigation.navigate(destination, {
                             date: this.topBar.getDate(),
@@ -47,7 +50,11 @@ export default class WorkoutsMain extends React.Component {
                                 ExerciseID: data[8]
                             },
                             update: update,
-                            recordID: data[9]
+                            recordID: data[9],
+                            numPop: numPop,
+                            callback: () => {
+                                this.child.requestWorkoutData(this.topBar.getDate())
+                            }
                         });
                     }}
                 />

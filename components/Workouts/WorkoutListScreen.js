@@ -85,7 +85,8 @@ export default class WorkoutListScreen extends React.Component {
                                 sets: 1,
                                 reps: 1,
                                 weight: 0,
-                                date: this.props.navigation.getParam('date', new Date())
+                                date: this.props.navigation.getParam('date', new Date()),
+                                callback: this.props.navigation.getParam('callback', null)
                             }
                         )
                         } else {

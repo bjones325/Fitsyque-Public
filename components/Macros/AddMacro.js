@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, TextField, View, Button, TextInput, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
+import { Text, View, Button, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import NetworkCall from '../Network';
 
 export default class AddMacro extends React.Component {
     constructor(props) {
@@ -41,7 +42,7 @@ export default class AddMacro extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-            <View style={styles.backButton}>
+                <View style={styles.backButton}>
                     <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
                         <Icon name='arrow-left' style={{
                             fontSize: 36,
@@ -49,56 +50,62 @@ export default class AddMacro extends React.Component {
                         }} />
                     </TouchableOpacity >
                 </View>
-                <View style={styles.buttons}>
-                    <Text style={{fontSize: 24, fontWeight: '600', color: 'silver', justifyContent: 'center' }}>Insert Macronutrient Data</Text>
-                    <Text style={styles.text}>Fat</Text>
-                    <TextInput
-                        borderRadius={25}
-                        textAlign={'center'}
-                        style={styles.textInput}
-                        keyboardType='numeric'
-                        placeholder="0"
-                        onChangeText={(text) => {
-                            this.setState({ Fat: isNaN(parseInt(text)) ? 0 : parseInt(text)})}
-                        }
-                        value={this.state.Fat.toString()}
-                        maxLength={3}
-                    />
-                    <Text style={styles.text}>Protein</Text>
-                    <TextInput
-                        borderRadius={25}
-                        textAlign={'center'}
-                        style={styles.textInput}
-                        keyboardType='numeric'
-                        placeholder="0"
-                        value={this.state.Protein}
-                        onChangeText={(text) => this.setState({ Protein: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
-                        value={this.state.Protein.toString()}
-                        maxLength={3}
-                    />
-                    <Text style={styles.text}>Carbs</Text>
-                    <TextInput
-                        borderRadius={25}
-                        textAlign={'center'}
-                        style={styles.textInput}
-                        placeholder="0"
-                        keyboardType='numeric'
-                        value={this.state.Carb}
-                        onChangeText={(text) => this.setState({ Carb: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
-                        value={this.state.Carb.toString()}
-                        maxLength={3}
-                    />
-                    <Button
-                        title="Confirm"
-                        color="green"
-                        style={styles.confirmButton}
-                        onPress={
-                            () => {
-                                this.pushNewMacro();
+                    <KeyboardAvoidingView style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                    }} behavior="position" keyboardVerticalOffset={-100} enabled>
+                    <View style={styles.buttons}>
+                        <Text style={{fontSize: 24, fontWeight: '600', color: 'silver', justifyContent: 'center' }}>Insert Macronutrient Data</Text>
+                        <Text style={styles.text}>Fat</Text>
+                        <TextInput
+                            borderRadius={25}
+                            textAlign={'center'}
+                            style={styles.textInput}
+                            keyboardType='numeric'
+                            placeholder="0"
+                            onChangeText={(text) => {
+                                this.setState({ Fat: isNaN(parseInt(text)) ? 0 : parseInt(text)})}
                             }
-                        }
-                    />
-                </View>
+                            value={this.state.Fat.toString()}
+                            maxLength={3}
+                        />
+                        <Text style={styles.text}>Protein</Text>
+                        <TextInput
+                            borderRadius={25}
+                            textAlign={'center'}
+                            style={styles.textInput}
+                            keyboardType='numeric'
+                            placeholder="0"
+                            value={this.state.Protein}
+                            onChangeText={(text) => this.setState({ Protein: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
+                            value={this.state.Protein.toString()}
+                            maxLength={3}
+                        />
+                        <Text style={styles.text}>Carbs</Text>
+                        <TextInput
+                            borderRadius={25}
+                            textAlign={'center'}
+                            style={styles.textInput}
+                            placeholder="0"
+                            keyboardType='numeric'
+                            value={this.state.Carb}
+                            onChangeText={(text) => this.setState({ Carb: isNaN(parseInt(text)) ? 0 : parseInt(text) })}
+                            value={this.state.Carb.toString()}
+                            maxLength={3}
+                        />
+                        <Button
+                            title="Confirm"
+                            color="green"
+                            style={styles.confirmButton}
+                            onPress={
+                                () => {
+                                    this.pushNewMacro();
+                                }
+                            }
+                        />
+                        
+                    </View>
+                    </KeyboardAvoidingView>
             </View>
         );
     }

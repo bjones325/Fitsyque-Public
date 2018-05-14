@@ -50,25 +50,28 @@ export default class DaySchedule extends React.Component {
     }
 
     deleteEntry = (id) => {
-        Network.authCall("https://fitsyque.azurewebsites.net/DayList", "delete",
-        {
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/DayList"
+        call.type = "delete"
+        call.extraHeaders = {
             date: this.props.date()
-        },
-        JSON.stringify({
+        }
+        call.body = JSON.stringify({
             RecordID: id
-        }),
-        (responseJson) => {
+        })
+        call.onSuccess = (responseJson) => {
             this.requestWorkoutData(this.props.date());
-        },
-        (responseJson) => {
+        }
+        call.onFailure = (responseJson) => {
             alert("Failed to delete?");
-        },
-        () => {
+        }
+        call.onError = () => {
             alert("There was an internal error while connecting! Please restart the app.");
-        },
-        () => {
+        }
+        call.onFinish = () => {
             this.setState({ loading: false });
-        });
+        }
+        call.execute(true);
     }
 
     render() {
@@ -89,7 +92,7 @@ export default class DaySchedule extends React.Component {
                                 item={item}
                                 collapsed={section.collapsed}
                                 onDelete={() => this.deleteEntry(item[9])}
-                                onUpdate={() => this.props.openModal(item, 1)}
+                                onUpdate={() => this.props.openModal(item, 1, 1)}
                                 />
                             }
                         }
@@ -106,7 +109,7 @@ export default class DaySchedule extends React.Component {
                             <View style={styles.endHeader}>
                                 <TouchableOpacity style={styles.iconTouch} onPress={() => {
                                     var length = this.state.sections[section.title].length - 1
-                                    this.props.openModal(this.state.sections[section.title][length], 0);
+                                    this.props.openModal(this.state.sections[section.title][length], 0, 1);
                                 }}>
                                     <Text style={{color: 'lawngreen', fontSize: 12, textAlign: 'center', paddingTop: 2}}>Quick Add</Text>
                                     <Icon name="add-to-list" style={styles.plus} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
+import {Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, processColor} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import TopBar from '../TopBar';
@@ -15,7 +15,7 @@ export default class MacroScreen extends React.PureComponent {
     constructor(props){
         super(props);
         this.state = {
-            data: this.parseData([{Fat: 1, Protein: 2, Carb: 3}]),
+            data: [],
             Fat: 0,
             Protein: 0,
             Carb: 0,
@@ -23,6 +23,7 @@ export default class MacroScreen extends React.PureComponent {
             unparsedData: []
         };
         this.requestMacroData(new Date());
+        this.parseData([{Fat: 1, Protein: 2, Carb: 3}])
     }
 
     requestMacroData = (date) => {
@@ -34,7 +35,7 @@ export default class MacroScreen extends React.PureComponent {
             date: date.toISOString().substring(0, 10)
         }
         call.onSuccess = (responseJson) => {
-            this.setState({data: this.parseData(responseJson.data)});
+            this.parseData(responseJson.data);
             this.setState({loading: false});
         }
         call.onFailure = (responseJson) => {
@@ -65,6 +66,7 @@ export default class MacroScreen extends React.PureComponent {
             console.log(responseJson);
             this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
         }
+        call.execute(true);
     }
 
     render() {
@@ -120,24 +122,27 @@ export default class MacroScreen extends React.PureComponent {
             Fat: totalFat,
             Protein: totalProtein,
             Carb: totalCarb,
-            unparsedData: jsonData
+            unparsedData: jsonData,
+            data: {
+                dataSets: [{
+                    values: [
+                        {value: totalFat, id: 1},
+                        {value: totalProtein, id: 2},
+                        {value: totalCarb, id: 3}
+                    ],
+                    label: 'Pie dataset',
+                    config: {
+                        colors: [processColor('#ff4500'), processColor('#000080'), processColor('#ffa500'), processColor('#8CEAFF'), processColor('#FF8C9D')],
+                        valueTextSize: 20,
+                        valueTextColor: processColor('green'),
+                        sliceSpace: 5,
+                        selectionShift: 13
+                    }
+                }]
+            }
         });
         return {
-            dataSets: [{
-                values: [
-                    {value: totalFat, id: 1},
-                    {value: totalProtein, id: 2},
-                    {value: totalCarb, id: 3}
-                ],
-                label: 'Pie dataset',
-                config: {
-                    colors: [processColor('#ff4500'), processColor('#000080'), processColor('#ffa500'), processColor('#8CEAFF'), processColor('#FF8C9D')],
-                    valueTextSize: 20,
-                    valueTextColor: processColor('green'),
-                    sliceSpace: 5,
-                    selectionShift: 13
-                }
-            }]
+            
         }
     }
 };
