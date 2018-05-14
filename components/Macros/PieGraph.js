@@ -74,6 +74,7 @@ class PieGraph extends React.Component {
             data={this.props.data}
             legend={this.state.legend}
             highlights={this.state.highlights}
+            touchEnabled={false}
 
             entryLabelColor={processColor('black')}
             entryLabelTextSize={20}

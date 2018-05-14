@@ -4,7 +4,6 @@ import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import TopBar from '../TopBar';
 import Modal from "react-native-modal";
-import MacroModal from './MacroModal';
 import PieGraph from './PieGraph'
 import MacroInformation from './MacroInformation';
 import DropdownAlert from 'react-native-dropdownalert';
@@ -15,13 +14,12 @@ export default class MacroScreen extends React.PureComponent {
     constructor(props){
         super(props);
         this.state = {
-            data: this.parseData({Fat: 1, Protein: 2, Carb: 3}),
-            isVisible: false,
+            data: this.parseData([{Fat: 1, Protein: 2, Carb: 3}]),
             Fat: 0,
             Protein: 0,
             Carb: 0,
             loading: false,
-            selectedType: null
+            unparsedData: []
         };
         this.requestMacroData(new Date());
     }
@@ -56,11 +54,51 @@ export default class MacroScreen extends React.PureComponent {
         });
     }
 
+    deleteMacro = (id) => {
+        AsyncStorage.getItem('@app:session').then((token) => {
+            return fetch('https://fitsyque.azurewebsites.net/Macro/Delete', {
+                method: "post",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': token
+                },
+                body: JSON.stringify({
+                    RecordID: id
+                })
+            })
+        })
+            .then((response) =>
+                response.json()
+            )
+            .then((responseJson) => {
+                if (!responseJson.success) {
+                    alert(responseJson.message);
+                } else {
+                    this.requestMacroData(this.topBar.getDate())
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log(responseJson);
+                this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
+            });
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(date) => this.requestMacroData(date)}
-                    plusPress={() => this.setState({isVisible: true, selectedWorkout: {}})} />
+                <TopBar
+                    endIcon
+                    nav={this.props.navigation}
+                    onRef={ref => (this.topBar = ref)}
+                    getData={(date) => this.requestMacroData(date)}
+                    plusPress={() => {
+                        this.props.navigation.navigate("AddMacro", {
+                            date: this.topBar.getDate()
+                        });
+                    }}
+                    dotURL={"https://fitsyque.azurewebsites.net/Macro/DotDates"}/>
                 <View>
                     {(this.state.Fat + this.state.Protein + this.state.Carb) == 0 ?
                     <Text style={{textAlign: 'center', padding: 20}}> No Macronutrient Data </Text>
@@ -79,26 +117,7 @@ export default class MacroScreen extends React.PureComponent {
                     </View>
                     }
                 </View>
-                <MacroInformation type={this.state.selectedType} amount={{Fat: this.state.Fat, Protein: this.state.Protein, Carb: this.state.Carb}} />
-                <Modal
-                    style = {styles.modal}
-                    isVisible={this.state.isVisible}
-                    backdropColor = 'gray'
-                    backdropOpacity = {0.5}
-                    onBackdropPress = {() => {
-                        this.setState({isVisible: false})
-                    }}
-                    animationIn = "fadeIn"
-                    animationOut = "fadeOut"
-                    >
-                    <MacroModal 
-                        date={() => this.topBar.getDate()}
-                        onClose={(type, header, text) => {
-                            this.setState({isVisible: false})
-                            this.requestMacroData(this.topBar.getDate());
-                            this.dropdown.alertWithType(type, header, text);
-                    }}/>
-                </Modal>
+                <MacroInformation deleteMacro={(id) => this.deleteMacro(id)} navigation={this.props.navigation} data={this.state.unparsedData} />
                 <DropdownAlert
                         defaultContainer={{ padding: 8, paddingTop: Platform.OS === 'android' ? 0 : 10, flexDirection: 'row' }}
                         ref={ref => this.dropdown = ref} startDelta={WINDOW.height + 200} endDelta={WINDOW.height}/>
@@ -107,20 +126,26 @@ export default class MacroScreen extends React.PureComponent {
     }
 
     parseData = (jsonData) => {
-        var fat = jsonData.Fat == null ? 1 : parseInt(jsonData.Fat);
-        var protein = jsonData.Protein == null ? 1 : parseInt(jsonData.Protein);
-        var carb = jsonData.Carb == null ? 1 : parseInt(jsonData.Carb);
-        var total = fat + protein + carb;
-        total = (total == null ? 1 : total);
-        this.setState({Fat: jsonData.Fat == undefined ? 0 : jsonData.Fat,
-            Protein: jsonData.Protein == undefined ? 0 : jsonData.Protein,
-            Carb: jsonData.Carb == undefined ? 0 : jsonData.Carb});
+        var totalFat = 0;
+        var totalProtein = 0;
+        var totalCarb = 0;
+        for (var i = 0; i < jsonData.length; i++) {
+            totalFat += jsonData[i].Fat;
+            totalProtein += jsonData[i].Protein;
+            totalCarb += jsonData[i].Carb;
+        }
+        this.setState({
+            Fat: totalFat,
+            Protein: totalProtein,
+            Carb: totalCarb,
+            unparsedData: jsonData
+        });
         return {
             dataSets: [{
                 values: [
-                    {value: fat, id: 1},
-                    {value: protein, id: 2},
-                    {value: carb, id: 3}
+                    {value: totalFat, id: 1},
+                    {value: totalProtein, id: 2},
+                    {value: totalCarb, id: 3}
                 ],
                 label: 'Pie dataset',
                 config: {
@@ -151,6 +176,7 @@ const styles = StyleSheet.create({
     
     container: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.7)'
     },
 
     pieView: {

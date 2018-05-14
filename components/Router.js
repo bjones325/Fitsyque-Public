@@ -7,6 +7,7 @@ import About from './Start/About';
 import MainScreen from './Start/MainScreen';
 import WorkoutsMain from './Workouts/WorkoutsMain';
 import MacroScreen from './Macros/MacroScreen';
+import AddMacro from './Macros/AddMacro';
 import GraphScreen from './Graphs/GraphScreen';
 import ImageGallery from './Measurements/ImageGallery';
 import GoalsMain from './Goals/GoalMain'
@@ -56,6 +57,9 @@ export const RootStack = StackNavigator({
     },
     CardioScreen: {
         screen: CardioScreen
+    },
+    AddMacro: {
+        screen: AddMacro
     }
 },
 {

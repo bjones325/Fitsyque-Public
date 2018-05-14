@@ -1,14 +1,15 @@
 import React from 'react';
-import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
+import { Text, TextField, View, Button, TextInput, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+import Icon from 'react-native-vector-icons/EvilIcons';
 
-export default class MacroModal extends React.Component {
+export default class AddMacro extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            Fat: 0,
-            Protein: 0,
-            Carb: 0
+            Fat:  this.props.navigation.getParam('fat', 0),
+            Protein: this.props.navigation.getParam('protein', 0),
+            Carb: this.props.navigation.getParam('carb', 0)
         };
     }
 
@@ -22,10 +23,12 @@ export default class MacroModal extends React.Component {
                     'x-access-token': token
                 },
                 body: JSON.stringify({
+                    Date: this.props.navigation.getParam('date', new Date()).toISOString().substring(0, 10),
+                    Update: this.props.navigation.getParam('update', 0),
+                    RecordID: this.props.navigation.getParam('recordID', 0),
                     Fat: this.state.Fat,
                     Protein: this.state.Protein,
-                    Carb: this.state.Carb,
-                    Date: this.props.date().toISOString().substring(0, 10)
+                    Carb: this.state.Carb
                 })
             })
         })
@@ -34,10 +37,9 @@ export default class MacroModal extends React.Component {
             )
             .then((responseJson) => {
                 if (!responseJson.success) {
-                    this.props.navigation.dispatch(resetB);
                     alert(responseJson.message);
                 } else {
-                    this.props.onClose("success", "Success", "Your macronutrients has been added!");
+                    this.props.navigation.dispatch(resetB);
                 }
             })
             .catch((error) => {
@@ -50,9 +52,17 @@ export default class MacroModal extends React.Component {
 
     render() {
         return (
-            <View style={styles.modalContainer}>
-                <Text style={{ paddingTop: 10, fontSize: 24, paddingBottom: 30, fontWeight: '600' }}>Insert Macro Data</Text>
+            <View style={styles.container}>
+            <View style={styles.backButton}>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <Icon name='arrow-left' style={{
+                            fontSize: 36,
+                            color: 'silver'
+                        }} />
+                    </TouchableOpacity >
+                </View>
                 <View style={styles.buttons}>
+                    <Text style={{fontSize: 24, fontWeight: '600', color: 'silver', justifyContent: 'center' }}>Insert Macronutrient Data</Text>
                     <Text style={styles.text}>Fat</Text>
                     <TextInput
                         borderRadius={25}
@@ -106,41 +116,43 @@ export default class MacroModal extends React.Component {
     }
 };
 
+const resetB = NavigationActions.reset({
+    index: 1,
+    actions: [NavigationActions.navigate({routeName: 'MainScreen'}),
+        NavigationActions.navigate({routeName: 'MacronutrientMain'})],
+});
+
 const styles = StyleSheet.create({
+
+    backButton: {
+        alignSelf: 'flex-start',
+        paddingTop: 25,
+        paddingLeft: 10
+    },
 
     confirmButton: {
         color: 'green',
         paddingTop: 40
     },
 
-    barView: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-
     buttons: {
-        flex: 1,
+        flex: 6,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 20,
-        paddingBottom: 70
     },
 
-    modalContainer: {
+    container: {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        backgroundColor: 'white',
-        borderRadius: 25,
-        height: 400,
-        width: 250,
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.7)'
     },
 
     textInput: {
         width: 50,
         height: 35,
-        borderColor: 'black',
+        borderColor: 'silver',
         borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
@@ -151,6 +163,7 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         fontSize: 20,
         paddingTop: 20,
-        paddingBottom: 5
+        paddingBottom: 5,
+        color: 'silver'
     }
 });
