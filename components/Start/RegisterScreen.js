@@ -2,7 +2,7 @@ import React from 'react';
 import { ImageBackground, Platform, TouchableOpacity, Dimensions, Text, View, Button, TextInput, StyleSheet } from 'react-native';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import Network from "../Network";
+import NetworkCall from "../NetworkCall";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -25,25 +25,27 @@ export default class LoginScreen extends React.Component {
             return;
         }
         this.setState({ visibleAnimation: true });
-        Network.noAuthCall("https://fitsyque.azurewebsites.net/Register",
-            (responseJson) => {
-                this.props.navigation.pop();
-                this.dropdown.alertWithType('success', "Account Created!", "You have successfully registered your account!");
-            },
-            (responseJson) => {
-                this.dropdown.alertWithType('error', "Error", responseJson.reason);
-            },
-            () => {
-                alert("There was an internal error while connecting! Please restart the app.")
-            },
-            () => {
-                this.setState({visibleAnimation: false});
-            },
-            JSON.stringify({
-                login: this.state.username,
-                password: this.state.password,
-                email: this.state.email
-            }));
+        var call = new NetworkCall()
+        call.url = "https://fitsyque.azurewebsites.net/Register";
+        call.body = JSON.stringify({
+            login: this.state.username,
+            password: this.state.password,
+            email: this.state.email
+        })
+        call.onSuccess = (responseJson) => {
+            this.props.navigation.pop();
+            this.dropdown.alertWithType('success', "Account Created!", "You have successfully registered your account!");
+        }
+        call.onFailure = (responseJson) => {
+            this.dropdown.alertWithType('error', "Error", responseJson.reason);
+        }
+        call.onError = (responseJson) => {
+            alert("There was an internal error while connecting! Please restart the app.")
+        }
+        call.onFinish = () => {
+            this.setState({visibleAnimation: false});
+        }
+        call.execute(false);
     }
 
     render() {

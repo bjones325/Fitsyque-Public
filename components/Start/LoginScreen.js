@@ -3,7 +3,7 @@ import {Keyboard, KeyboardAvoidingView, TouchableOpacity, ImageBackground, Platf
 import {NavigationActions } from 'react-navigation';
 import DropdownAlert from 'react-native-dropdownalert';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import Network from "../Network";
+import NetworkCall from "../NetworkCall";
 var Spinner = require('react-native-spinkit');
 const WINDOW = Dimensions.get('window')
 
@@ -20,24 +20,23 @@ export default class LoginScreen extends React.Component {
     login = () => {
         Keyboard.dismiss();
         this.setState({visibleAnimation: true});
-        Network.noAuthCall("https://fitsyque.azurewebsites.net/Login",
-            (responseJson) => {
-                this.props.navigation.dispatch(resetMain);
-                AsyncStorage.setItem('@app:session', responseJson.token);
-            },
-            (responseJson) => {
-                this.dropdown.alertWithType('error', "Error", responseJson.reason);
-            },
-            () => {
-                alert("There was an internal error while connecting! Please restart the app.")
-            },
-            () => {
-                this.setState({visibleAnimation: false});
-            },
-            JSON.stringify({
-                login: this.state.username,
-                password: this.state.password
-            }));
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/Login"
+        call.body = JSON.stringify({
+            login: this.state.username,
+            password: this.state.password
+        })
+        call.onSuccess = (responseJson) => {
+            this.props.navigation.dispatch(resetMain);
+            AsyncStorage.setItem('@app:session', responseJson.token);
+        }
+        call.onFailure = (responseJson) => {
+            this.dropdown.alertWithType('error', "Error", responseJson.reason);
+        }
+        call.onFinish = () => {
+            this.setState({visibleAnimation: false});
+        }
+        call.execute(false);
     }
 
     render() {

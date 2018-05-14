@@ -3,7 +3,7 @@ import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, Touchab
 import { StackNavigator, NavigationActions } from 'react-navigation';
 import WorkoutDetailSelector from '../WorkoutDetailSelector';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import Network from "../Network";
+import NetworkCall from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -20,21 +20,21 @@ export default class WorkoutListScreen extends React.Component {
     }
 
     requestWorkoutData = () => {
-        Network.authCall("https://fitsyque.azurewebsites.net/WorkoutList", "get",
-            null,
-            null,
-            (responseJson) => {
-                this.setState({ data: responseJson.data });
-            },
-            (responseJson) => {
-                this.props.navigation.dispatch(resetB);
-                alert(responseJson.message);
-            },
-            () => {
-                alert("There was an internal error while connecting! Please restart the app.")
-            },
-            () => {
-            });
+        var call = new NetworkCall();
+        call.url = "https://fitsyque.azurewebsites.net/WorkoutList"
+        call.type = "get"
+        call.onSuccess = (responseJson) => {
+            this.setState({ data: responseJson.data });
+        }
+        call.onFailure = (responseJson) => {
+            this.props.navigation.dispatch(resetB);
+            alert(responseJson.message);
+        }
+        call.onError = () => {
+            alert("There was an internal error while connecting! Please restart the app.")
+        }
+
+        call.execute(true)
     }
 
     render() {
