@@ -16,11 +16,11 @@ class GraphChart extends React.Component {
 
     this.state = {
       marker: {
-        enabled: false,
-        digits: 2,
-        backgroundTint: processColor('teal'),
-	      markerColor: processColor('#F0C0FF8C'),
-        textColor: processColor('white'),
+        enabled: true,
+        digits: 0,
+        markerColor: processColor('#FFF'),
+        textSize: 14,
+        textColor: processColor('black'),
       },
       xAxis: {
         granularityEnabled: true,
@@ -69,13 +69,7 @@ class GraphChart extends React.Component {
             xAxis={this.state.xAxis}
             yAxis={this.state.yAxis}
             drawGridBackground={true}
-            marker={{
-              enabled: true,
-              digits: 0,
-              markerColor: processColor('#FFF'),
-              textSize: 14,
-              textColor: processColor('black'),
-            }}
+            marker={this.state.marker}
             borderColor={processColor('teal')}
             borderWidth={1}
             drawBorders={true}
@@ -86,7 +80,6 @@ class GraphChart extends React.Component {
             scaleXEnabled={true}
             scaleYEnabled={true}
             pinchZoom={true}
-            doubleTapToZoomEnabled={true}
             chartBackgroundColor={processColor('rgba(0,0,0,0)')}
             gridBackgroundColor={processColor('rgba(0,0,0,0.0)')}
 

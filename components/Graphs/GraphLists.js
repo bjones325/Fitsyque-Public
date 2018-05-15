@@ -27,7 +27,6 @@ export default class GraphLists extends React.Component {
         var call = new NetworkCall();
         call.url = "https://fitsyque.azurewebsites.net/Graph/WorkoutList"
         call.type = "get"
-        console.log(this.props.beginDate + "-C-" + this.props.endDate)
         call.extraHeaders = {
             beginDate: this.props.beginDate.toISOString().substring(0, 10),
             endDate: this.props.endDate.toISOString().substring(0, 10),
@@ -37,7 +36,7 @@ export default class GraphLists extends React.Component {
                 workoutNames: responseJson.data,
                 selectedWorkout: {},
                 selectedValueSet: "",
-                fullData: [],
+                dataTypes: [],
                 refresh: !this.state.refresh,
             });
             this.props.setData([])
@@ -53,7 +52,7 @@ export default class GraphLists extends React.Component {
     }
 
     requestWorkoutData = (exerciseID, valueSet) => {
-        console.log(valueSet);
+        console.log(exerciseID + "--" + valueSet);
         var call = new NetworkCall();
         call.url = ("https://fitsyque.azurewebsites.net/Graph/Data/" + valueSet)
         call.type = "get"
@@ -103,6 +102,7 @@ export default class GraphLists extends React.Component {
                                         selectedWorkout: item,
                                         dataTypes: types,
                                         selectedValueSet: types[0],
+                                        refresh: !this.state.refresh
                                     })
                                     this.requestWorkoutData(item.ExerciseID, types[0]);
                                 }}>
@@ -117,11 +117,12 @@ export default class GraphLists extends React.Component {
                         renderItem={({item}) => {  
                                 return <TouchableOpacity onPress={() => {
                                     this.setState({
-                                        selectedValueSet: item
+                                        selectedValueSet: item,
+                                        refresh: !this.state.refresh
                                     })
                                     this.requestWorkoutData(this.state.selectedWorkout.ExerciseID, item);
                                 }}>
-                                <Text style={item == this.state.selectedValueSet ? styles.selectedItem : styles.item}>{item.replace("_", " ")}</Text></TouchableOpacity>}
+                                <Text style={item == this.state.selectedValueSet? styles.selectedItem : styles.item}>{item.replace("_", " ")}</Text></TouchableOpacity>}
                         }
                     />
                 </View>
@@ -133,7 +134,7 @@ export default class GraphLists extends React.Component {
         if (typeID == null) return [];
         var types = [];
         if (typeID == 0) {
-            types.push("Max_Weight");
+            types.push("Max_Weight", "Average_Weight", "Average_Reps", "Total_Weight", "Total_Reps");
         } else {
             types.push(["Duration", 4], ["Intensity", 5], ["Incline", 6], ["Resistence", 7]);
         }

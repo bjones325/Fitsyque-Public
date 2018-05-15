@@ -6,13 +6,12 @@ import GraphRanges from './GraphRanges';
 import GraphLists from './GraphLists';
 const WINDOW = Dimensions.get('window')
 
-
 export default class GraphScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             beginDate: new Date(),
-            endDate: new Date(),
+            endDate: new Date()
         }
     }
 
