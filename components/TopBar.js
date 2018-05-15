@@ -115,7 +115,6 @@ export default class WorkoutsMain extends React.Component {
                     <View style={styles.modalContainer}>
                         <Text style={{ paddingTop: 10, fontSize: 24, paddingBottom: 10, fontWeight: '600' }}>Select a Date</Text>
                         <Calendar
-                            //current={this.state.jumpDate.toISOString().substring(0,10)}
                             markedDates={
                                 this.getMarkedDates()
                             }
@@ -148,6 +147,9 @@ export default class WorkoutsMain extends React.Component {
                                 date: this.state.jumpDate,
                                 visible: false
                             })
+                            console.log("Calendar JUmp")
+                            console.log(this.state.jumpDate);
+                            console.log("-----")
                             this.props.getData(this.state.jumpDate);
                         }}/>
                     </View>

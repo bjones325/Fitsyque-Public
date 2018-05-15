@@ -16,7 +16,7 @@ export default class About extends React.Component {
                     My name is Blake Jones and I am the sole developer for Fitsyque.
                     I'm currently enrolled at the Georgia Institute of Technology as a Computer Science major
                     with concentrations in artificial intelligence and data networking.
-
+                    {"\n\n"}
                     I began seriously exercising in my Sophomore year of college, when I noticed there was a lack of a well-designed,
                     well-maintained, free app to track workouts. All of the apps on the market were buggy,
                     underdeveloped/difficult to use, required an expensive subscription, or all of the above.

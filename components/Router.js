@@ -15,6 +15,8 @@ import WorkoutListScreen from './Workouts/WorkoutListScreen'
 import StrengthScreen from './Workouts/StrengthScreen'
 import CardioScreen from './Workouts/CardioScreen'
 
+import NavigationService from './NavigationService';
+
 export const RootStack = StackNavigator({
     Start: {
         screen: Splash,

@@ -1,5 +1,7 @@
 import { AsyncStorage } from 'react-native';
-
+import {NavigationActions } from 'react-navigation';
+import Router from './Router';
+import NavigationService from './NavigationService.js';
 export default class NetworkCall {
 
     set url(newURL) {
@@ -79,7 +81,17 @@ export default class NetworkCall {
             if (responseJson.success && this._onSuccess) {
                 this._onSuccess(responseJson);
             } else if (this._onFailure) {
-                this._onFailure(responseJson);
+                if (responseJson.token == false) {
+                    NavigationService.reset(0, ['Start']);
+                    alert(responseJson.message);
+                } else {
+                    NetInfo.isConnected.fetch().then(isConnected => {
+                        if (!isConnected) {
+                            alert("Cannot connect to server. Check your internet access.")
+                        }
+                    })
+                    this._onFailure(responseJson);
+                }
             }
             if (this._onFinish) this._onFinish();
         })

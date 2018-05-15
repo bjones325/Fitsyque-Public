@@ -1,10 +1,9 @@
 import React from 'react';
 import {FlatList, Text, Platform, Dimensions, StyleSheet, TouchableOpacity, View, AsyncStorage, processColor} from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import TopBar from '../TopBar';
 import GraphChart from './GraphChart';
 import GraphRanges from './GraphRanges';
-import NetworkCall from '../Network'
+import GraphLists from './GraphLists';
 const WINDOW = Dimensions.get('window')
 
 
@@ -12,170 +11,51 @@ export default class GraphScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            selectedWorkout: {},
-            selectedValueSet: [],
             beginDate: new Date(),
             endDate: new Date(),
-            workoutNames: [],
-            fullData: [],
-            refresh: false
         }
-        this.requestWorkoutList(new Date(), new Date());
-    }
-
-    requestWorkoutList = () => {
-        var call = new NetworkCall();
-        call.url = "https://fitsyque.azurewebsites.net/Graph/WorkoutList"
-        call.type = "get"
-        call.extraHeaders = {
-            beginDate: this.state.beginDate.toISOString().substring(0, 10),
-            endDate: this.state.endDate.toISOString().substring(0, 10),
-        }
-        call.onSuccess = (responseJson) => {
-            this.setState({workoutNames: responseJson.data, selectedWorkout: {}, selectedValueSet: [], fullData: [], dataTypes: []});
-        }
-        call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
-        }
-        call.onError = (error) => {
-            console.log(error);
-            alert("There was an internal error while connecting! Please restart the app.")
-        }
-        call.execute(true);
-    }
-
-    requestWorkoutData = (exerciseID) => {
-        var call = new NetworkCall();
-        call.url = "https://fitsyque.azurewebsites.net/Graph/Data"
-        call.type = "get"
-        call.extraHeaders = {
-            beginDate: this.state.beginDate.toISOString().substring(0, 10),
-            endDate: this.state.endDate.toISOString().substring(0, 10),
-            ExerciseID: exerciseID
-        }
-        call.onSuccess = (responseJson) => {
-            this.parseData(responseJson.data);
-        }
-        call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
-        }
-        call.onError = (error) => {
-            console.log(error);
-            alert("There was an internal error while connecting! Please restart the app.")
-        }
-        call.execute(true);
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <TopBar endIcon={false} nav={this.props.navigation} onRef={ref => (this.topBar = ref)} getData={(change) => {
-                    var bdate = new Date();
-                    bdate.setDate(this.state.beginDate.getDate() + change)
-                    var edate = new Date();
-                    edate.setDate(this.state.endDate.getDate() + change)
-                    this.setState({
-                        beginDate: bdate,
-                        endDate: edate
-                    })
-                    this.requestWorkoutList()
-                }}
-                    
-                    plusPress={() => this.setState({selectedWorkout: {}})} />
-                <GraphRanges date={() => this.topBar.getDate()} update={(begin) => {
-                    this.setState({
-                        beginDate: begin,
-                    })
-                    this.requestWorkoutList()
-                }}
-                    />
-                {Object.keys(this.state.fullData).length === 0 ?
+                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)}
+                    dotURL={"https://fitsyque.azurewebsites.net/DayList/DotDates"}
+                    getData={(newDate) => {
+                        this.setState({
+                            endDate: newDate
+                        })
+                        var dif = this.graphRanges.getDateDif()
+                        this.graphRanges.props.update(dif[0], dif[1], dif[2]);
+                    }}/>
+                <GraphRanges onRef={ref => (this.graphRanges = ref)}
+                    update={(dayDif, monDif, yearDif) => {
+                        var date = new Date(this.state.endDate)
+                        date.setDate(date.getDate() - dayDif);
+                        date.setMonth(date.getMonth() - monDif);
+                        date.setFullYear(date.getFullYear() - yearDif);
+                        this.setState({
+                            beginDate: date
+                        }, () => {
+                            this.graphLists.requestWorkoutList()
+                        });
+                    }}/>
+                {1 === 0 ?
                     <Text style={styles.emptyText}> No Workouts Logged </Text>
                 :
                     <View style={{width: WINDOW.width, height: 400}}>
                         <GraphChart data={this.state.graphData}/>
                     </View>
                 }
-                <View style={styles.wordSet}>
-                    <Text style={styles.listTitle}>Workouts</Text>
-                    <Text style={styles.listTitle}>Stats</Text>
-                </View>
-                <View style={styles.listSet}>
-                    <FlatList
-                    data={this.state.workoutNames}
-                    style={{
-                        alignSelf: 'flex-start',
-                        paddingLeft: 8,
-                        flex: 1,
-                        borderRadius: 25,
-                        height: 150,
-                        borderWidth: 1,
-                        borderColor: 'silver'
-                    }}
-                    keyExtractor={(item, index) => item.Name}
-                    renderItem={({item}) => {  
-                                return <TouchableOpacity onPress={() => {
-                                    this.setState({
-                                        selectedWorkout: item,
-                                        selectedValueSet: [],
-                                    })
-                                    this.getDataTypes(item.TypeID)
-                                    this.requestWorkoutData(item.ExerciseID);
-                                }}>
-                                <Text style={item.Name == this.state.selectedWorkout.Name ? styles.selectedItem : styles.item}>{item.Name}</Text></TouchableOpacity>}
-                        }
-                    />
-                    <FlatList
-                        data={this.state.dataTypes}
-                        extraData={this.state.refresh}
-                        keyExtractor={(item, index) => item[0]}
-                        style={styles.valueSet}
-                        renderItem={({item}) => {  
-                                return <TouchableOpacity onPress={() => {
-                                    this.setGraphData(this.state.selectedWorkout.Name, item[1])
-                                    this.setState({
-                                        selectedValueSet: item,
-                                        refresh: !this.state.refresh
-                                    })
-                                    this.requestWorkoutData(this.state.selectedWorkout.ExerciseID);
-                                }}>
-                                <Text style={item[0] == this.state.selectedValueSet[0] ? styles.selectedItem : styles.item}>{item[0]}</Text></TouchableOpacity>}
-                        }
-                    />
-                </View>
+                <GraphLists setData={(data) => this.setGraphData(data)} beginDate={this.state.beginDate} endDate={this.state.endDate} onRef={ref => (this.graphLists = ref)}/>
             </View>
         );
     }
 
-    getDataTypes = (typeID) => {
-        if (typeID == null) return [];
-        var types = [["Sets", 1]];
-        if (typeID == 0) {
-            types.push(["Reps", 2], ["Weight", 3]);
-        } else {
-            types.push(["Duration", 4], ["Intensity", 5], ["Incline", 6], ["Resistence", 7]);
-        }
-        this.setState({dataTypes: types});
-    }
-
-    setGraphData = (workoutName, index) => {
-        var data = [];
-        if(this.state.fullData != null) {
-            if(this.state.fullData[workoutName] != null) {
-                if (index != null && index != undefined) {
-                    var setData = this.state.fullData[workoutName];
-                    this.state.fullData[workoutName].map(function(item) {
-                        var value = item[index]
-                        data.push({y: value, marker: value})
-                    })
-                }
-            }
-        }
+    setGraphData = (graphData) => {
         var returnval = {
             dataSets: [{
-              values: data,
+              values: graphData,
               label: 'Company X',
               config: {
                 lineWidth: 2,
@@ -215,29 +95,7 @@ export default class GraphScreen extends React.Component {
     }
 };
 
-const resetB = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'MainScreen'})],
-});
-
 const styles = StyleSheet.create({
-
-    listStyle: {
-        alignSelf: 'flex-start',
-        paddingLeft: 8,
-        borderWidth: 3,
-        borderColor: 'black',
-        borderRadius: 15
-    },
-
-    listSet: {
-        justifyContent: 'center',
-        alignSelf: 'center',
-        flexDirection: 'row',
-        flex: 1,
-        paddingHorizontal: 5,
-    },
-
     text: {
         color: 'red', //#841584
         fontWeight: 'bold',
@@ -253,55 +111,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         flex: 1
-    },
-
-    item: {
-        padding: 5,
-        fontSize: 16,
-        height: 25,
-        color: 'silver'
-    },
-
-    selectedItem: {
-        padding: 5,
-        fontSize: 16,
-        height: 25,
-        color: 'green'
-    },
-
-    workoutNames: {
-        alignSelf: 'flex-start',
-        paddingLeft: 8,
-        flex: 1,
-        borderRadius: 25,
-        height: 150,
-        borderWidth: 1,
-        borderColor: 'silver'
-    },
-
-    valueSet: {
-        alignSelf: 'flex-start',
-        paddingLeft: 8,
-        flex: 1,
-        borderRadius: 25,
-        height: 150,
-        borderWidth: 1,
-        borderColor: 'silver'
-    },
-
-    wordSet: {
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        flexDirection: 'row'
-    },
-
-    listTitle: {
-        paddingBottom: 5,
-        color: 'silver',
-        fontWeight: '200',
-        fontSize: 26,
-        width: 120,
-        textAlign: 'center'
     },
 
     emptyText: {
