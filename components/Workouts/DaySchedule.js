@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, View, Button, TextInput, StyleSheet, SectionList, AsyncStorage, ListItem, Header, TouchableOpacity } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Entypo';
 import WorkoutItem from './WorkoutItem';
 import NetworkCall from "../Network";
+import Collapsible from 'react-native-collapsible';
 var Spinner = require('react-native-spinkit');
 
 
@@ -45,7 +45,12 @@ export default class DaySchedule extends React.Component {
         call.execute(true);
     }
 
-    deleteEntry = (id) => {
+    deleteEntry = (id, index) => {
+        var section = this.state.data[index];
+        if (this.state.data[index].data.length == 1) {
+            this.state.data[index].headerCollapsed = true;
+            this.forceUpdate();
+        }
         var call = new NetworkCall();
         call.url = "https://fitsyque.azurewebsites.net/DayList"
         call.type = "delete"
@@ -56,10 +61,18 @@ export default class DaySchedule extends React.Component {
             RecordID: id
         })
         call.onSuccess = (responseJson) => {
-            this.requestWorkoutData(this.props.date());
-        }
-        call.onFailure = (responseJson) => {
-            alert("Failed to delete?");
+            var section = this.state.data[index];
+            for (var i = 0; i < section.data.length; i++) {
+                if (section.data[i][9] == id) {
+                    if (this.state.data[index].data.length == 1) {
+                        this.state.data.splice(index, 1);
+                    } else {
+                        section.data.splice(i, 1);
+                    }
+                    this.forceUpdate();
+                    break;
+                }
+            }
         }
         call.onError = () => {
             alert("There was an internal error while connecting! Please restart the app.");
@@ -87,31 +100,35 @@ export default class DaySchedule extends React.Component {
                             return <WorkoutItem
                                 item={item}
                                 collapsed={section.collapsed}
-                                onDelete={() => this.deleteEntry(item[9])}
+                                onDelete={() => {
+                                    this.deleteEntry(item[9], section.index)}
+                                }
                                 onUpdate={() => this.props.openModal(item, 1, 1)}
                                 />
                             }
                         }
                         renderSectionHeader={({ section }) =>
-                        <View style={styles.header}>
-                            <TouchableOpacity
-                                style={{paddingLeft: 8, flex: 3}}
-                                onPress={() => {
-                                    section.collapsed = !section.collapsed;
-                                    this.forceUpdate();
-                                }}>
-                                <Text style={styles.headerText}>{section.title}</Text>
-                            </TouchableOpacity>
-                            <View style={styles.endHeader}>
-                                <TouchableOpacity style={styles.iconTouch} onPress={() => {
-                                    var length = this.state.sections[section.title].length - 1
-                                    this.props.openModal(this.state.sections[section.title][length], 0, 1);
-                                }}>
-                                    <Text style={{color: 'lawngreen', fontSize: 12, textAlign: 'center', paddingTop: 2}}>Quick Add</Text>
-                                    <Icon name="add-to-list" style={styles.plus} />
+                        <Collapsible collapsed={section.headerCollapsed}>
+                            <View style={styles.header}>
+                                <TouchableOpacity
+                                    style={{paddingLeft: 8, flex: 3}}
+                                    onPress={() => {
+                                        section.collapsed = !section.collapsed;
+                                        this.forceUpdate();
+                                    }}>
+                                    <Text style={styles.headerText}>{section.title}</Text>
                                 </TouchableOpacity>
+                                <View style={styles.endHeader}>
+                                    <TouchableOpacity style={styles.iconTouch} onPress={() => {
+                                        var length = this.state.sections[section.title].length - 1
+                                        this.props.openModal(this.state.sections[section.title][length], 0, 1);
+                                    }}>
+                                        <Text style={{color: 'lawngreen', fontSize: 12, textAlign: 'center', paddingTop: 2}}>Quick Add</Text>
+                                        <Icon name="add-to-list" style={styles.plus} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
+                        </Collapsible>
                         }
                         sections={this.state.data}
                     />
@@ -141,8 +158,8 @@ export default class DaySchedule extends React.Component {
                 jsonData[i].Name
             ])
         }
-        var result = Object.keys(sections).map(function (key) {
-            return { title: key, collapsed: true, data: sections[key] };
+        var result = Object.keys(sections).map(function (key, index) {
+            return { title: key, headerCollapsed: false, collapsed: true, data: sections[key], index: index };
         });
         this.setState({
             data: result,
@@ -151,11 +168,6 @@ export default class DaySchedule extends React.Component {
         });
     }
 };
-
-const resetB = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
-});
 
 const styles = StyleSheet.create({
     view: {

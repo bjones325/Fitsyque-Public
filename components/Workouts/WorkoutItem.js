@@ -6,11 +6,14 @@ import Collapsible from 'react-native-collapsible';
 export default class WorkoutItem extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            collapsed: false
+        }
     }
 
     render() {
         return (
-            <Collapsible collapsed={this.props.collapsed}>
+            <Collapsible collapsed={this.state.collapsed || this.props.collapsed}>
                 <SwipeRow
                     disableRightSwipe={false}
                     disableLeftSwipe={false}
@@ -29,8 +32,10 @@ export default class WorkoutItem extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.backDelete}
-                        onPress={() => this.props.onDelete()}
-                        >
+                        onPress={() => {
+                            this.props.onDelete()
+                            this.setState({collapsed: true})
+                        }}>
                         <Text style={{ fontWeight: 'bold' }}>Delete</Text>
                     </TouchableOpacity>
                 </View>
