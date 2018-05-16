@@ -29,9 +29,6 @@ export default class AddMacro extends React.Component {
         call.onSuccess = () => {
             this.props.navigation.dispatch(resetB);
         }
-        call.onFailure = () => {
-            alert(responseJson.message);
-        }
         call.onError = () => {
             console.log(error);
             this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")

@@ -36,9 +36,6 @@ export default class LoginScreen extends React.Component {
             this.props.navigation.pop();
             this.dropdown.alertWithType('success', "Account Created!", "You have successfully registered your account!");
         }
-        call.onFailure = (responseJson) => {
-            this.dropdown.alertWithType('error', "Error", responseJson.reason);
-        }
         call.onError = (responseJson) => {
             alert("There was an internal error while connecting! Please restart the app.")
         }

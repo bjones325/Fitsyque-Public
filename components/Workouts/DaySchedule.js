@@ -36,10 +36,6 @@ export default class DaySchedule extends React.Component {
         call.onSuccess = (responseJson) => {
             this.parseData(responseJson.data);
         }
-        call.onFailure = (responseJson) => {
-            //this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
-        }
         call.onError = () => {
             alert("There was an internal error while connecting! Please restart the app.");
         }

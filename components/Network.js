@@ -24,10 +24,6 @@ export default class NetworkCall {
         this._onSuccess = func
     }
 
-    set onFailure(func) {
-        this._onFailure = func
-    }
-
     set onError(func) {
         this._onError = func
     }
@@ -52,8 +48,6 @@ export default class NetworkCall {
         .then((responseJson) => {
             if (responseJson.success && this._onSuccess) {
                 this._onSuccess(responseJson);
-            } else if (this._onFailure) {
-                this._onFailure(responseJson);
             }
             if (this._onFinish) this._onFinish();
         })
@@ -80,7 +74,7 @@ export default class NetworkCall {
         .then((responseJson) => {
             if (responseJson.success && this._onSuccess) {
                 this._onSuccess(responseJson);
-            } else if (this._onFailure) {
+            } else {
                 if (responseJson.token == false) {
                     NavigationService.reset(0, ['Start']);
                     alert(responseJson.message);
@@ -90,7 +84,6 @@ export default class NetworkCall {
                             alert("Cannot connect to server. Check your internet access.")
                         }
                     })
-                    this._onFailure(responseJson);
                 }
             }
             if (this._onFinish) this._onFinish();

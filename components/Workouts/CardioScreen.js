@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import NetworkCall from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
@@ -37,11 +36,6 @@ export default class StrengthScreen extends React.Component {
             this.props.navigation.pop(1)
             this.props.onClose("success", "Success", "Your workout has been added!");
         }
-        call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
-            //this.dropdown.alertWithType('error', "Error", responseJson.reason);
-        }
         call.onError = () => {
             this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
         }
@@ -72,11 +66,6 @@ export default class StrengthScreen extends React.Component {
         );
     }
 }
-
-const resetB = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'MainScreen'})],
-});
 
 const styles = StyleSheet.create({
     confirmButton: {

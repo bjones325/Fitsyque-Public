@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
-import { StackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import NetworkCall from "../Network";
 
@@ -24,10 +23,6 @@ export default class WorkoutListScreen extends React.Component {
         call.type = "get"
         call.onSuccess = (responseJson) => {
             this.setState({ data: responseJson.data });
-        }
-        call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
         }
         call.onError = () => {
             alert("There was an internal error while connecting! Please restart the app.")
@@ -98,11 +93,6 @@ export default class WorkoutListScreen extends React.Component {
         );
     }
 }
-
-const resetB = NavigationActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'MainScreen' })],
-});
 
 const styles = StyleSheet.create({
 

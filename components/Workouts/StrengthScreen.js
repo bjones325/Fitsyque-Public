@@ -40,10 +40,6 @@ export default class StrengthScreen extends React.Component {
             this.props.navigation.getParam('callback', null).call();
             //this.props.onClose("success", "Success", "Your workout has been added!");
         }
-        call.onFailure = (responseJson) => {
-            this.props.navigation.dispatch(resetB);
-            alert(responseJson.message);
-        }
         call.onError = () => {
             this.props.onClose("error", "Internal Error", "There was an internal error while connecting! Please restart the app.")
         }

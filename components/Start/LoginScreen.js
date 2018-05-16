@@ -30,9 +30,6 @@ export default class LoginScreen extends React.Component {
             this.props.navigation.dispatch(resetMain);
             AsyncStorage.setItem('@app:session', responseJson.token);
         }
-        call.onFailure = (responseJson) => {
-            this.dropdown.alertWithType('error', "Error", responseJson.reason);
-        }
         call.onFinish = () => {
             this.setState({visibleAnimation: false});
         }

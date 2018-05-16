@@ -41,9 +41,6 @@ export default class GraphLists extends React.Component {
             });
             this.props.setData([])
         }
-        call.onFailure = (responseJson) => {
-            alert(responseJson.message);
-        }
         call.onError = (error) => {
             console.log(error);
             alert("There was an internal error while connecting! Please restart the app.")

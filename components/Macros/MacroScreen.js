@@ -58,9 +58,6 @@ export default class MacroScreen extends React.PureComponent {
         call.onSuccess = (responseJson) => {
             this.requestMacroData(this.topBar.getDate())
         }
-        call.onFailure = (responseJson) => {
-            alert(responseJson.message);
-        }
         call.onError = (responseJson) => {
             console.log(error);
             console.log(responseJson);
