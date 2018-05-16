@@ -1,9 +1,10 @@
 import React from 'react';
-import { Keyboard, Slider, Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Platform, Dimensions, Keyboard, Slider, Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import WorkoutDetailSelector from '../WorkoutDetailSelector';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import NetworkCall from "../Network";
+import DropdownAlert from 'react-native-dropdownalert';
+const WINDOW = Dimensions.get('window')
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP
 
@@ -86,11 +87,17 @@ export default class StrengthScreen extends React.Component {
                         color="green"
                         style={styles.confirmButton}
                         onPress={() => {
-                            this.pushNewWorkout();
+                            if (this.state.Weight > 0) {
+                                this.pushNewWorkout();
+                            } else {
+                                this.dropdown.alertWithType('error', "Error", "Cannot submit an exercise with weight 0.")
+                            }
                             }
                         }
                     />
                 </View>
+                <DropdownAlert defaultContainer={{ flex: 2, padding: 8, paddingTop: Platform.OS === 'android' ? 0 : 10, flexDirection: 'row' }}
+                    ref={ref => this.dropdown = ref} startDelta={WINDOW.height + 200} endDelta={WINDOW.height} />
             </View>
         );
     }

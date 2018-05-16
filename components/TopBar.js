@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import Modal from "react-native-modal";
 import { Calendar } from 'react-native-calendars';
 import NetworkCall from './Network';
+import NavigationService from './NavigationService.js';
 
 export default class WorkoutsMain extends React.Component {
     constructor(props) {
@@ -60,7 +61,7 @@ export default class WorkoutsMain extends React.Component {
         return (
             <View style={styles.barView}>
                 <View style={styles.invisible}>
-                    <TouchableOpacity onPress={() => this.props.nav.goBack()}>
+                    <TouchableOpacity onPress={() => NavigationService.goBack()}>
                         <Icon name='arrow-left' style={styles.iconType} />
                     </TouchableOpacity >
                 </View>
@@ -147,9 +148,6 @@ export default class WorkoutsMain extends React.Component {
                                 date: this.state.jumpDate,
                                 visible: false
                             })
-                            console.log("Calendar JUmp")
-                            console.log(this.state.jumpDate);
-                            console.log("-----")
                             this.props.getData(this.state.jumpDate);
                         }}/>
                     </View>

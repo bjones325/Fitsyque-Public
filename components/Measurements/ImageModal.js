@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage} from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import WorkoutDetailSelector from '../WorkoutDetailSelector';
 var ImagePicker = require('react-native-image-picker');
 
 export default class ImageModal extends React.Component {
@@ -100,12 +99,6 @@ export default class ImageModal extends React.Component {
             return (
                 <View style={styles.modalContainer}>
                 <Text style={{paddingTop: 5, fontSize: 18}}>Set Workout Stats</Text>
-                <WorkoutDetailSelector text="Calf" getValue={this.state.Calf} updateValue={(value) => {this.setState({Calf: value})}} />
-                <WorkoutDetailSelector text="Thigh" getValue={this.state.Thigh} updateValue={(value) => {this.setState({Thigh: value})}} />
-                <WorkoutDetailSelector text="Hip" getValue={this.state.Hip} updateValue={(value) => {this.setState({Hip: value})}} />
-                <WorkoutDetailSelector text="Waist" getValue={this.state.Waist} updateValue={(value) => {this.setState({Waist: value})}} />
-                <WorkoutDetailSelector text="Chest" getValue={this.state.Chest} updateValue={(value) => {this.setState({Chest: value})}} />
-                <WorkoutDetailSelector text="Bicep" getValue={this.state.Bicep} updateValue={(value) => {this.setState({Bicep: value})}} />
                 <Button
                     title="Import Image"
                     color="black"

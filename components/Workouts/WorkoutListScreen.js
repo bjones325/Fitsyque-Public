@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, TextField, View, Button, TextInput, StyleSheet, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import { StackNavigator, NavigationActions } from 'react-navigation';
-import WorkoutDetailSelector from '../WorkoutDetailSelector';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import NetworkCall from "../Network";
 

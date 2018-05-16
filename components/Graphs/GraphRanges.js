@@ -20,11 +20,11 @@ export default class GraphRanges extends React.Component {
     getDateDif = () => {
         switch(this.state.selectedRange) {
             case 0:
-                return [0,0,0]
-            case 1:
                 return [7,0,0]
-            case 2:
+            case 1:
                 return [0,1,0]
+            case 2:
+                return [0,3,0]
             case 3:
                 return [0,6,0]
             case 4:
@@ -39,25 +39,25 @@ export default class GraphRanges extends React.Component {
                     this.setState({
                         selectedRange: 0
                     })
-                    this.props.update(0, 0, 0);
+                    this.props.update(7, 0, 0);
                 }}>
-                    <Text style={this.state.selectedRange == 0 ? styles.selected : styles.regular}>Today</Text>
+                    <Text style={this.state.selectedRange == 0 ? styles.selected : styles.regular}>Week</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     this.setState({
                         selectedRange: 1
                     })
-                    this.props.update(7, 0, 0);
+                    this.props.update(0, 1, 0);
                 }}>
-                    <Text style={this.state.selectedRange == 1 ? styles.selected : styles.regular}>Week</Text>
+                    <Text style={this.state.selectedRange == 1 ? styles.selected : styles.regular}>Month</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     this.setState({
                         selectedRange: 2
                     })
-                    this.props.update(0, 1, 0);
+                    this.props.update(0, 3, 0);
                 }}>
-                    <Text style={this.state.selectedRange == 2 ? styles.selected : styles.regular}>Month</Text>
+                    <Text style={this.state.selectedRange == 2 ? styles.selected : styles.regular}>3 Months</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     this.setState({

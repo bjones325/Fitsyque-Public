@@ -37,27 +37,27 @@ export default class Splash extends React.Component {
                     <View style={styles.iconRow}>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('WorkoutsMain')}>
                             <Icon2 name="weight-kilogram" style={styles.icon} />
-                            <Text style={styles.text}> Workouts </Text>
+                            <Text style={styles.text}>Workouts</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('GraphScreen')}>
                             <Icon name="line-chart" style={styles.icon} />
-                            <Text style={styles.text}> Analysis </Text>
+                            <Text style={styles.text}>Analysis</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('GoalsMain')}>
                             <Icon name="check-square" style={styles.icon} />
-                            <Text style={styles.text}> Goals </Text>
+                            <Text style={styles.text}>Goals</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.iconRow}>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('MacronutrientMain')}>
                             <Icon name="pie-chart" style={styles.icon} />
-                            <Text style={styles.text}> Macros </Text>
+                            <Text style={styles.text}>Nutrition</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.touch} onPress={() => this.props.navigation.navigate('ImageGallery')}>
                             <Icon2 name="ruler" style={styles.icon} />
-                            <Text style={styles.text}> Physique </Text>
+                            <Text style={styles.text}>Physique</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

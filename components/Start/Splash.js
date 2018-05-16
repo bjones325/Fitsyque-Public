@@ -37,12 +37,12 @@ const Styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.7)'
+        backgroundColor: 'rgba(0,0,0,0.5)'
     },
 
     titleText: {
         color: 'indianred',
-        fontWeight: "300",
+        fontWeight: "400",
         fontSize: 38,
         paddingTop: 50,
     },

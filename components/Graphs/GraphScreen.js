@@ -9,8 +9,10 @@ const WINDOW = Dimensions.get('window')
 export default class GraphScreen extends React.Component {
     constructor(props){
         super(props);
+        var date = new Date();
+        date.setDate(date.getDate() - 7);
         this.state = {
-            beginDate: new Date(),
+            beginDate: date,
             endDate: new Date()
         }
     }
@@ -18,7 +20,7 @@ export default class GraphScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TopBar nav={this.props.navigation} onRef={ref => (this.topBar = ref)}
+                <TopBar onRef={ref => (this.topBar = ref)}
                     dotURL={"https://fitsyque.azurewebsites.net/DayList/DotDates"}
                     getData={(newDate) => {
                         this.setState({
@@ -70,27 +72,6 @@ export default class GraphScreen extends React.Component {
         this.setState({
             graphData: returnval
         })     
-    }
-
-    parseData = (jsonData) => {
-        var sections = {};
-        for(var i = 0; i < jsonData.length; i++) {
-            var item = sections[jsonData[i].Name];
-            if (item == null) {
-                sections[jsonData[i].Name] = [];
-            }
-            sections[jsonData[i].Name].push([
-                jsonData[i].TypeID,
-                jsonData[i].Sets,
-                jsonData[i].Reps,
-                jsonData[i].Weight,
-                jsonData[i].Duration,
-                jsonData[i].Intensity,
-                jsonData[i].Incline,
-                jsonData[i].Resistence,
-            ])
-        }
-        this.setState({fullData: sections});
     }
 };
 

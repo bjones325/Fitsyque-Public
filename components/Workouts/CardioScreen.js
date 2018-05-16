@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import WorkoutDetailSelector from '../WorkoutDetailSelector';
 import NetworkCall from "../Network";
 
 // INTEGRATION AND API TEST --- SUPERTEST --- REALWORLD EXAMPLE APP

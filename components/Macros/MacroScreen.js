@@ -75,7 +75,6 @@ export default class MacroScreen extends React.PureComponent {
                 <TopBar
                     endIcon
                     nav={this.props.navigation}
-                    onRef={ref => (this.topBar = ref)}
                     getData={(date) => this.requestMacroData(date)}
                     plusPress={() => {
                         this.props.navigation.navigate("AddMacro", {

@@ -22,13 +22,6 @@ class GraphChart extends React.Component {
         textSize: 14,
         textColor: processColor('black'),
       },
-      xAxis: {
-        granularityEnabled: true,
-        granularity : 1,
-        textSize: 15,
-        textColor: processColor('silver'),
-        axisMinimum: 0
-      },
       yAxis: {
         left: {
           granularityEnabled: true,
@@ -66,7 +59,12 @@ class GraphChart extends React.Component {
             data={this.props.data}
             chartDescription={{text: ''}}
             legend={{enabled: false}}
-            xAxis={this.state.xAxis}
+            xAxis={{
+              granularityEnabled: true,
+              granularity : 1,
+              textSize: 15,
+              textColor: processColor('silver'),
+            }}
             yAxis={this.state.yAxis}
             drawGridBackground={true}
             marker={this.state.marker}
@@ -91,7 +89,6 @@ class GraphChart extends React.Component {
             
           />
         </View>
-
       </View>
     );
   }

@@ -17,7 +17,6 @@ export default class WorkoutsMain extends React.Component {
             <View style={styles.container}>
                 <TopBar
                     endIcon
-                    nav={this.props.navigation}
                     onRef={ref => (this.topBar = ref)}
                     getData={(date) => this.child.requestWorkoutData(date)}
                     plusPress={() => {

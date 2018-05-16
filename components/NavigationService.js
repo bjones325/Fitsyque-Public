@@ -28,10 +28,17 @@ function reset(index, screens) {
             actions: actions
         })
     );
-  }
+}
+
+function goBack() {
+  _navigator.dispatch(
+    NavigationActions.back()
+  );
+}
 
 export default {
   navigate,
   setTopLevelNavigator,
-  reset
+  reset,
+  goBack
 };

@@ -52,7 +52,6 @@ export default class GraphLists extends React.Component {
     }
 
     requestWorkoutData = (exerciseID, valueSet) => {
-        console.log(exerciseID + "--" + valueSet);
         var call = new NetworkCall();
         call.url = ("https://fitsyque.azurewebsites.net/Graph/Data/" + valueSet)
         call.type = "get"
@@ -92,7 +91,8 @@ export default class GraphLists extends React.Component {
                         borderRadius: 25,
                         height: 150,
                         borderWidth: 1,
-                        borderColor: 'silver'
+                        borderColor: 'silver',
+                        overflow: 'hidden'
                     }}
                     keyExtractor={(item, index) => item.Name}
                     renderItem={({item}) => {  
@@ -134,7 +134,7 @@ export default class GraphLists extends React.Component {
         if (typeID == null) return [];
         var types = [];
         if (typeID == 0) {
-            types.push("Max_Weight", "Average_Weight", "Average_Reps", "Total_Weight", "Total_Reps");
+            types.push("Max_Weight", "Min_Weight", "Average_Weight", "Average_Reps", "Total_Weight", "Total_Reps");
         } else {
             types.push(["Duration", 4], ["Intensity", 5], ["Incline", 6], ["Resistence", 7]);
         }
@@ -178,7 +178,8 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         height: 150,
         borderWidth: 1,
-        borderColor: 'silver'
+        borderColor: 'silver',
+        overflow: 'hidden'
     },
 
     wordSet: {
