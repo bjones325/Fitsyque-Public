@@ -1,43 +1,48 @@
-var mysql = require('mysql2');
+var express = require('express');
+var router = express.Router();
 var jwt     = require('jsonwebtoken');
+var app = express();
 var secret = require('../config').secret;
-var config =
-{
-    connectionLimit: 25,
-    host: 'studentmysql.mysql.database.azure.com',
-    user: 'bjones325@studentmysql',
-    password: 'Catkid1541$',
-    database: 'fitsyque',
-    port: 3306,
-    ssl: false
-};
 
+var login = require('./Login');
+var daylist = require('./DayList');
+var register = require('./Register');
+var workoutlist = require('./WorkoutList');
+var macro = require('./Macro');
+var graph = require('./Graph');
+var imag = require('./Image');
+var goal = require('./Goal');
 
-var pool = mysql.createPool(config);
+router.use(login);
+router.use(register);
 
-var conn = function (callItem) {
-  pool.getConnection(function(err, connection) {
-    if (err) {
-        console.log(err);
-    } else {
-        callItem(connection);
-    }
-  });
-};
+router.use(function(req, res, next) {
+	var token = req.get('x-access-token');
+	if (token) {
+		jwt.verify(token, secret, function(err, decoded) {			
+			if (err) {
+				console.log(err);
+				return res.json({ success: false, token: false, message: 'You have been logged out of Fitsyque. Please login.' });		
+			} else {
+				req.decoded = decoded;
+				next();
+			}
+		});
+		
+	} else {
+		return res.json({ 
+			success: false, 
+			token: false,
+			message: 'Failed to authenticate your account. Please login.'
+		});
+	}
+});
 
-function sanitizeInput(input) {
-    if (!input
-        || input.includes('“')
-        || input.includes("'")
-        || input.includes("'")
-        || input.includes("‘")
-        || input.includes('"')) {
-        return null;
-    }
-    return input;
-}
+router.use(daylist);
+router.use(workoutlist);
+router.use(macro);
+router.use(graph);
+router.use(imag);
+router.use(goal);
 
-module.exports = {
-  conn: conn,
-  clean: sanitizeInput
-};
+module.exports = router;
