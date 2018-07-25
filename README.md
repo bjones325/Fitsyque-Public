@@ -18,7 +18,7 @@ React Native NPM Packages:
 • react-native-collapsible  
 • react-native-calendars  
 
-Node.js NPM Packages:
+Node.js NPM Packages:  
 • express  
 • jsonwebtoken  
 • mysql2  
