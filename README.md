@@ -5,7 +5,7 @@ The app stack consists of a React-Native client (optimized for iOS), a Node.js R
 
 Rest API Files can be found under the "Node.js Files" directory and the Entity Relationship diagram describing the MySQL schema is listed as "MySQL ER Diagram.png" under root.
 
-React Native NPM Packages: \n
+React Native NPM Packages:
 • react-navigation
 • react-native-vector-icons
 • react-native-dropdownalert
